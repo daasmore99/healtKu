@@ -1,6 +1,5 @@
 package com.healthku.app.ui.screens
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -21,9 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -43,15 +41,15 @@ import com.healthku.app.data.DailyHealthSummary
 import com.healthku.app.data.SleepLogEntry
 import com.healthku.app.data.SleepTagType
 import com.healthku.app.ui.components.CalendarStrip
-import com.healthku.app.ui.theme.AsclepiosBg
-import com.healthku.app.ui.theme.AsclepiosCard
-import com.healthku.app.ui.theme.AsclepiosCardBorder
-import com.healthku.app.ui.theme.AsclepiosTextMuted
-import com.healthku.app.ui.theme.AsclepiosTextPrimary
-import com.healthku.app.ui.theme.AsclepiosTextSecondary
-import com.healthku.app.ui.theme.SagePillBg
-import com.healthku.app.ui.theme.SagePillGreen
-import com.healthku.app.ui.theme.SleepCardBg
+import com.healthku.app.ui.theme.LumiAmber
+import com.healthku.app.ui.theme.LumiCanvasDark
+import com.healthku.app.ui.theme.LumiCardBorderDark
+import com.healthku.app.ui.theme.LumiCardDark
+import com.healthku.app.ui.theme.LumiPeriwinkle
+import com.healthku.app.ui.theme.LumiSage
+import com.healthku.app.ui.theme.LumiTextMuted
+import com.healthku.app.ui.theme.LumiTextPrimary
+import com.healthku.app.ui.theme.LumiTextSecondary
 
 @Composable
 fun SleepOverviewScreen(
@@ -62,7 +60,7 @@ fun SleepOverviewScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(AsclepiosBg)
+            .background(LumiCanvasDark)
             .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
         // Top App Bar
@@ -75,32 +73,39 @@ fun SleepOverviewScreen(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(RoundedCornerShape(14.dp))
-                    .background(AsclepiosCard)
-                    .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(14.dp)),
+                    .background(LumiCardDark)
+                    .border(1.dp, LumiCardBorderDark, RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = AsclepiosTextPrimary,
+                        tint = LumiTextPrimary,
                         modifier = Modifier.size(18.dp)
                     )
                 }
             }
 
+            Text(
+                text = "Sleep Architecture",
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                color = LumiTextPrimary
+            )
+
             Box(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(RoundedCornerShape(14.dp))
-                    .background(AsclepiosCard)
-                    .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(14.dp)),
+                    .background(LumiCardDark)
+                    .border(1.dp, LumiCardBorderDark, RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.CalendarMonth,
                     contentDescription = null,
-                    tint = AsclepiosTextPrimary,
+                    tint = LumiTextPrimary,
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -113,36 +118,13 @@ fun SleepOverviewScreen(
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        // Section: Sleep Overview | See All
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Sleep Overview",
-                fontSize = 19.sp,
-                fontWeight = FontWeight.Bold,
-                color = AsclepiosTextPrimary
-            )
-            Text(
-                text = "See All",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                color = AsclepiosTextSecondary
-            )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Hero Green Sleep Overview Card (matching screenshot)
+        // Hero Sleep Card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(26.dp)),
+                .border(1.dp, LumiCardBorderDark, RoundedCornerShape(26.dp)),
             shape = RoundedCornerShape(26.dp),
-            colors = CardDefaults.cardColors(containerColor = SleepCardBg),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            colors = CardDefaults.cardColors(containerColor = LumiCardDark)
         ) {
             Row(
                 modifier = Modifier
@@ -151,55 +133,51 @@ fun SleepOverviewScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Left: Serene Avatar Graphic
                 Box(
                     modifier = Modifier
-                        .size(64.dp)
+                        .size(54.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFB5D4BA)),
+                        .background(Color(0x227D8EC2)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.SelfImprovement,
+                        imageVector = Icons.Default.Bedtime,
                         contentDescription = null,
-                        tint = Color(0xFF1E482C),
-                        modifier = Modifier.size(40.dp)
+                        tint = LumiPeriwinkle,
+                        modifier = Modifier.size(28.dp)
                     )
                 }
 
-                // Middle: Text
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 16.dp)
                 ) {
-                    val duration = if (summary.sleepHours > 0f) String.format("%.1fh", summary.sleepHours) else "Belum Ada"
+                    val duration = if (summary.sleepHours > 0f) "${String.format("%.1f", summary.sleepHours)}h" else "--"
                     Text(
-                        text = if (summary.sleepHours > 0f) "$duration tidur" else "126+ Sleep",
+                        text = "$duration Sleep Rest",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1B3D25)
+                        color = LumiTextPrimary
                     )
                     Text(
-                        text = if (summary.sleepHours > 0f) "Deep sleep: ${String.format("%.1fh", summary.deepSleepHours)}" else "Sleep irregularities",
+                        text = if (summary.deepSleepHours > 0f) "Deep: ${String.format("%.1f", summary.deepSleepHours)}h • Optimal Phase" else "Data sinkron via Health Connect",
                         fontSize = 12.sp,
-                        color = Color(0xFF336240)
+                        color = LumiTextSecondary
                     )
                 }
 
-                // Right: White '+' Button
                 Box(
                     modifier = Modifier
-                        .size(38.dp)
-                        .clip(CircleShape)
-                        .background(Color.White),
-                    contentAlignment = Alignment.Center
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0x227D8EC2))
+                        .padding(horizontal = 10.dp, vertical = 6.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add",
-                        tint = Color(0xFF265135),
-                        modifier = Modifier.size(20.dp)
+                    Text(
+                        text = "Real-time",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = LumiPeriwinkle
                     )
                 }
             }
@@ -207,36 +185,23 @@ fun SleepOverviewScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Section: Disease Risks / Sleep History
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Disease Risks & History",
-                fontSize = 19.sp,
-                fontWeight = FontWeight.Bold,
-                color = AsclepiosTextPrimary
-            )
-            Icon(
-                imageVector = Icons.Default.MoreHoriz,
-                contentDescription = null,
-                tint = AsclepiosTextSecondary,
-                modifier = Modifier.size(20.dp)
-            )
-        }
+        Text(
+            text = "Sleep History & Trends",
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold,
+            color = LumiTextPrimary
+        )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // History List
+        // Real or Recent Sleep Logs
         val displayList = if (summary.sleepHistory.isNotEmpty()) {
             summary.sleepHistory
         } else {
             listOf(
-                SleepLogEntry("Oct 17", "17", 5.2f, "Low", SleepTagType.LOW, 0),
-                SleepLogEntry("Oct 16", "16", 8.2f, "Rem", SleepTagType.REM, 8),
-                SleepLogEntry("Oct 15", "15", 2.2f, "Insomniac", SleepTagType.WARNING, 78)
+                SleepLogEntry("Nov 07", "07", 7.2f, "Optimal", SleepTagType.OPTIMAL, 0),
+                SleepLogEntry("Nov 06", "06", 6.4f, "Low", SleepTagType.LOW, 2),
+                SleepLogEntry("Nov 05", "05", 8.1f, "Optimal", SleepTagType.OPTIMAL, 0)
             )
         }
 
@@ -245,124 +210,112 @@ fun SleepOverviewScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             items(displayList) { item ->
-                SleepHistoryRowItem(item = item)
-            }
-        }
-    }
-}
-
-@Composable
-fun SleepHistoryRowItem(item: SleepLogEntry) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(20.dp)),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = AsclepiosCard),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Left Date circle
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(46.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFF3ECE0)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = item.dateText.take(3),
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = AsclepiosTextSecondary
-                            )
-                            Text(
-                                text = item.dayNumber,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = AsclepiosTextPrimary
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(14.dp))
-
-                    Column {
-                        Text(
-                            text = "You slept for ${item.durationHours}h",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = AsclepiosTextPrimary
-                        )
-                        Text(
-                            text = if (item.suggestionCount > 0) "${item.suggestionCount} AI Suggestion" else "No Suggestion",
-                            fontSize = 11.sp,
-                            color = AsclepiosTextMuted
-                        )
-                    }
-                }
-
-                // Status Tag Pill
-                val pillBg = when (item.tagType) {
-                    SleepTagType.OPTIMAL -> SagePillBg
-                    SleepTagType.LOW -> Color(0xFFE2EED9)
-                    SleepTagType.REM -> Color(0xFFFEE8D6)
-                    SleepTagType.WARNING -> Color(0xFF1E211F)
-                }
-                val pillTextColor = when (item.tagType) {
-                    SleepTagType.OPTIMAL -> SagePillGreen
-                    SleepTagType.LOW -> Color(0xFF3B6B2B)
-                    SleepTagType.REM -> Color(0xFFC76214)
-                    SleepTagType.WARNING -> Color.White
-                }
-
-                Box(
+                Card(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(pillBg)
-                        .padding(horizontal = 12.dp, vertical = 5.dp)
+                        .fillMaxWidth()
+                        .border(1.dp, LumiCardBorderDark, RoundedCornerShape(20.dp)),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = LumiCardDark)
                 ) {
-                    Text(
-                        text = item.tagText,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = pillTextColor
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(44.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFF1B1E2B)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = item.dateText.take(3),
+                                            fontSize = 9.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            color = LumiTextMuted
+                                        )
+                                        Text(
+                                            text = item.dayNumber,
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = LumiTextPrimary
+                                        )
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.width(12.dp))
+
+                                Column {
+                                    Text(
+                                        text = "${item.durationHours} hours sleep",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = LumiTextPrimary
+                                    )
+                                    Text(
+                                        text = if (item.suggestionCount > 0) "${item.suggestionCount} AI Tips" else "Healthy Rhythm",
+                                        fontSize = 11.sp,
+                                        color = LumiTextMuted
+                                    )
+                                }
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(
+                                        when (item.tagType) {
+                                            SleepTagType.OPTIMAL -> Color(0x225E8C4A)
+                                            SleepTagType.LOW -> Color(0x22E2A55E)
+                                            SleepTagType.REM -> Color(0x227D8EC2)
+                                            SleepTagType.WARNING -> Color(0x22F16751)
+                                        }
+                                    )
+                                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = item.tagText,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = when (item.tagType) {
+                                        SleepTagType.OPTIMAL -> LumiSage
+                                        SleepTagType.LOW -> LumiAmber
+                                        SleepTagType.REM -> LumiPeriwinkle
+                                        SleepTagType.WARNING -> Color(0xFFF16751)
+                                    }
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        val progressFrac = (item.durationHours / 8.0f).coerceIn(0.1f, 1f)
+                        LinearProgressIndicator(
+                            progress = { progressFrac },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(4.dp)
+                                .clip(RoundedCornerShape(2.dp)),
+                            color = when (item.tagType) {
+                                SleepTagType.OPTIMAL -> LumiSage
+                                SleepTagType.LOW -> LumiAmber
+                                SleepTagType.REM -> LumiPeriwinkle
+                                SleepTagType.WARNING -> Color(0xFFF16751)
+                            },
+                            trackColor = Color(0xFF1E212D),
+                            strokeCap = StrokeCap.Round
+                        )
+                    }
                 }
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // Thin progress line underneath (matching screenshot)
-            val progressFrac = (item.durationHours / 8.0f).coerceIn(0.1f, 1f)
-            val lineColor = when (item.tagType) {
-                SleepTagType.LOW -> Color(0xFF5D9B4A)
-                SleepTagType.REM -> Color(0xFFE58B43)
-                SleepTagType.WARNING -> Color(0xFF222222)
-                SleepTagType.OPTIMAL -> SagePillGreen
-            }
-
-            LinearProgressIndicator(
-                progress = { progressFrac },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(3.dp)
-                    .clip(RoundedCornerShape(2.dp)),
-                color = lineColor,
-                trackColor = Color(0xFFEDE9DF),
-                strokeCap = StrokeCap.Round
-            )
         }
     }
 }

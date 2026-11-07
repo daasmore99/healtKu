@@ -1,34 +1,19 @@
-# 🌿 HealthKu - Asclepios Edition
+# 🔮 LUMI - AI Health Assistant (Afterglow Edition)
 
-Aplikasi Android Native (Kotlin + Jetpack Compose) dengan desain UI/UX **Asclepios Theme (Warm Cream & Sage Green)** yang tersambung **100% langsung ke Android Health Connect** tanpa data dummy/tiruan.
-
----
-
-### 🎨 Tampilan Layar (Sesuai Referensi Asclepios)
-1. **Layar 1 (Dashboard / Health Score):**
-   - Header Profil & Notifikasi Status Health Connect.
-   - Pill Search bar (`Search aklepios...`).
-   - **Asclepios Score Card:** Menampilkan skor kesiapan fisik (Readiness Score 1–100) dengan selector pill hijau sage.
-   - **Smart Health Metrics Grid:**
-     - Kartu **Heart Rate** dengan ilustrasi organ 3D jantung beranimasi glow dan grafik gelombang.
-     - Kartu **Blood Pressure** dengan ilustrasi stetoskop dan indikator denyut.
-     - Kartu **Calories Burned** & **Daily Walking (Langkah & Jarak)**.
-   - **AI Athletic Coach:** Briefing pagi dan evaluasi malam berbasis data asli tubuh.
-2. **Layar 2 (Live Monitor / Blood Pressure):**
-   - Pembacaan besar `SYSmm/hg` (121/80).
-   - Indikator circular timer/gauge (0s, 15s, 20s) dengan organ 3D jantung di tengah.
-   - Overview kartu Saturasi Oksigen (SpO2) dan denyut nadi.
-   - Kapsul bawah: *Swipe to start reading*.
-3. **Layar 3 (Sleep Overview & Disease Risks):**
-   - Kalender mingguan interaktif.
-   - Kartu hijau *Sleep Overview* (durasi tidur & fase deep sleep).
-   - Riwayat tidur harian dengan status pill (*Optimal*, *Low*, *Rem*, *Insomniac*).
-4. **Layar 4 (Settings):**
-   - Pengaturan izin akses Health Connect resmi.
-   - Konfigurasi opsional Google Gemini API Key.
+Aplikasi Android Native (Kotlin + Jetpack Compose) yang terinspirasi oleh karya desain **LUMI - AI Health Assistant oleh Afterglow** di Dribbble ([Shot #27837777](https://dribbble.com/shots/27837777-UI-UX-Design-for-LUMI-AI-Health-Assistant)).
 
 ---
 
-### 🔒 Integrasi Data Real
-- Membaca data langsung dari API resmi **Android Health Connect (`androidx.health.connect.client`)**.
-- Jika data belum tercatat di HP, sistem menampilkan status apa adanya (`--` / `0`), tanpa data dummy palsu.
+### ✨ Fitur Utama LUMI
+1. **LUMI Breathing AI Orb:**
+   - Animasi dinamis bola cahaya organik (*sinusoidal breathing animation*) yang merefleksikan kesiapan biologis dan denyut tubuh secara realtime.
+2. **Modular Bento Grid (Bite-Sized Wellness Cards):**
+   - **Sleep Architecture (Periwinkle `#7D8EC2`):** Total jam tidur, deep sleep %, dan indikator kualitas istirahat.
+   - **Heart & Rhythm (Coral `#F16751`):** Denyut nadi realtime bpm, resting heart rate, dan gelombang sparkline halus.
+   - **Movement & Energy (Amber `#E2A55E`):** Jumlah langkah harian, jarak tempuh km, dan pembakaran kalori aktif dengan animated progress bars.
+   - **Vitals & SpO2 (Sage `#5E8C4A`):** Tekanan darah (SYS/DIA) dan saturasi oksigen darah SpO2.
+3. **Conversational AI Companion (LUMI Chat):**
+   - Tanya jawab interaktif seputar pemulihan fisik, kesiapan olahraga, dan tips pola hidup sehat.
+4. **Integrasi Resmi Android Health Connect:**
+   - Membaca data biometrik asli dari sensor HP dan Smartwatch melalui **Health Connect API**.
+   - Dilengkapi tombol direct bridge ke pengaturan sistem Health Connect untuk mengatasi kendala izin "Allow All".

@@ -1,6 +1,7 @@
 package com.healthku.app.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,11 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,10 +28,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.healthku.app.ui.theme.MintPill
-import com.healthku.app.ui.theme.TextMuted
-import com.healthku.app.ui.theme.TextPrimary
-import com.healthku.app.ui.theme.TextSecondary
+import com.healthku.app.ui.theme.LumiCardBorderDark
+import com.healthku.app.ui.theme.LumiCardDark
+import com.healthku.app.ui.theme.LumiPeriwinkle
+import com.healthku.app.ui.theme.LumiTextMuted
+import com.healthku.app.ui.theme.LumiTextPrimary
+import com.healthku.app.ui.theme.LumiTextSecondary
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -47,7 +47,6 @@ fun CalendarStrip(
     var selectedDayOffset by remember { mutableIntStateOf(0) }
 
     val daysOfWeek = remember(today) {
-        // Current week from 3 days ago to 3 days ahead
         (-3..3).map { today.plusDays(it.toLong()) }
     }
 
@@ -57,7 +56,10 @@ fun CalendarStrip(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 8.dp)
+            .clip(RoundedCornerShape(22.dp))
+            .background(LumiCardDark)
+            .border(1.dp, LumiCardBorderDark, RoundedCornerShape(22.dp))
+            .padding(16.dp)
     ) {
         // Month Header
         Row(
@@ -67,43 +69,41 @@ fun CalendarStrip(
         ) {
             Text(
                 text = "$currentMonthText $currentYear",
-                fontSize = 17.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextPrimary
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color = LumiTextPrimary
             )
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color(0xFFF0ECE1)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = "Kalender",
-                        tint = TextPrimary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF1B1E2B)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CalendarMonth,
+                    contentDescription = "Kalender",
+                    tint = LumiPeriwinkle,
+                    modifier = Modifier.size(16.dp)
+                )
             }
         }
 
-        // Days row (Sun, Mon, Tue, ...)
+        // Days of week row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 14.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             daysOfWeek.forEach { date ->
                 val dayName = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
                 Text(
                     text = dayName,
-                    fontSize = 12.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
-                    color = TextMuted,
+                    color = LumiTextMuted,
                     modifier = Modifier.weight(1f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
@@ -130,10 +130,10 @@ fun CalendarStrip(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(38.dp)
+                            .size(36.dp)
                             .clip(CircleShape)
                             .background(
-                                if (isSelected) MintPill else Color.Transparent
+                                if (isSelected) LumiPeriwinkle else Color.Transparent
                             )
                             .clickable {
                                 selectedDayOffset = date.dayOfYear - today.dayOfYear
@@ -143,9 +143,9 @@ fun CalendarStrip(
                     ) {
                         Text(
                             text = date.dayOfMonth.toString(),
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal,
-                            color = if (isSelected) Color.White else TextPrimary
+                            color = if (isSelected) Color.White else LumiTextPrimary
                         )
                     }
                 }

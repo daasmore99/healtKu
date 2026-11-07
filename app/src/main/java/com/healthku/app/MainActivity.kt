@@ -1,17 +1,19 @@
 package com.healthku.app
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.ChatBubbleOutline
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.Settings
@@ -38,16 +40,17 @@ import com.healthku.app.data.AICoachReport
 import com.healthku.app.data.DailyHealthSummary
 import com.healthku.app.data.HealthConnectManager
 import com.healthku.app.data.WorkoutCategory
-import com.healthku.app.ui.screens.BloodPressureLiveScreen
-import com.healthku.app.ui.screens.DashboardScreen
-import com.healthku.app.ui.screens.SettingsScreen
+import com.healthku.app.ui.screens.LumiChatScreen
+import com.healthku.app.ui.screens.LumiHomeScreen
+import com.healthku.app.ui.screens.LumiSettingsScreen
+import com.healthku.app.ui.screens.LumiVitalsScreen
 import com.healthku.app.ui.screens.SleepOverviewScreen
-import com.healthku.app.ui.theme.AsclepiosCard
 import com.healthku.app.ui.theme.HealthKuTheme
-import com.healthku.app.ui.theme.SageDark
-import com.healthku.app.ui.theme.SagePillBg
-import com.healthku.app.ui.theme.TextMuted
-import com.healthku.app.ui.theme.TextPrimary
+import com.healthku.app.ui.theme.LumiCardBorderDark
+import com.healthku.app.ui.theme.LumiCardDark
+import com.healthku.app.ui.theme.LumiPeriwinkle
+import com.healthku.app.ui.theme.LumiTextMuted
+import com.healthku.app.ui.theme.LumiTextPrimary
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -59,7 +62,7 @@ class MainActivity : ComponentActivity() {
         PermissionController.createRequestPermissionResultContract()
     ) { granted ->
         if (granted.containsAll(healthConnectManager.permissions)) {
-            Toast.makeText(this, "Izin Health Connect Diberikan! Mengambil data real...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Izin Health Connect Aktif! Mengambil data real...", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "Izin Health Connect belum lengkap", Toast.LENGTH_SHORT).show()
         }
@@ -98,7 +101,7 @@ class MainActivity : ComponentActivity() {
                                 aiCoachEngine.generateLocalBriefing(realData, selectedWorkout)
                             }
                             if (realData.hasHealthConnectPermission) {
-                                Toast.makeText(this@MainActivity, "Data Real Berhasil Diperbarui dari Health Connect", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@MainActivity, "Data Real Terkini Diperbarui", Toast.LENGTH_SHORT).show()
                             }
                         } else {
                             Toast.makeText(this@MainActivity, "Health Connect belum terpasang di HP Anda", Toast.LENGTH_LONG).show()
@@ -114,9 +117,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         NavigationBar(
-                            containerColor = AsclepiosCard,
-                            contentColor = TextPrimary,
-                            tonalElevation = 0.dp
+                            containerColor = LumiCardDark,
+                            contentColor = LumiTextPrimary,
+                            tonalElevation = 8.dp
                         ) {
                             NavigationBarItem(
                                 selected = selectedTab == 0,
@@ -128,13 +131,13 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
-                                label = { Text("Health Score", fontSize = 11.sp) },
+                                label = { Text("LUMI", fontSize = 10.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = SageDark,
-                                    selectedTextColor = SageDark,
-                                    indicatorColor = SagePillBg,
-                                    unselectedIconColor = TextMuted,
-                                    unselectedTextColor = TextMuted
+                                    selectedIconColor = LumiPeriwinkle,
+                                    selectedTextColor = LumiPeriwinkle,
+                                    indicatorColor = Color(0x337D8EC2),
+                                    unselectedIconColor = LumiTextMuted,
+                                    unselectedTextColor = LumiTextMuted
                                 )
                             )
 
@@ -143,18 +146,18 @@ class MainActivity : ComponentActivity() {
                                 onClick = { selectedTab = 1 },
                                 icon = {
                                     Icon(
-                                        imageVector = Icons.Default.MonitorHeart,
-                                        contentDescription = "Blood Pressure",
+                                        imageVector = Icons.Default.Favorite,
+                                        contentDescription = "Vitals",
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
-                                label = { Text("Pressure", fontSize = 11.sp) },
+                                label = { Text("Vitals", fontSize = 10.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = SageDark,
-                                    selectedTextColor = SageDark,
-                                    indicatorColor = SagePillBg,
-                                    unselectedIconColor = TextMuted,
-                                    unselectedTextColor = TextMuted
+                                    selectedIconColor = LumiPeriwinkle,
+                                    selectedTextColor = LumiPeriwinkle,
+                                    indicatorColor = Color(0x337D8EC2),
+                                    unselectedIconColor = LumiTextMuted,
+                                    unselectedTextColor = LumiTextMuted
                                 )
                             )
 
@@ -168,13 +171,13 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
-                                label = { Text("Sleep Log", fontSize = 11.sp) },
+                                label = { Text("Sleep", fontSize = 10.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = SageDark,
-                                    selectedTextColor = SageDark,
-                                    indicatorColor = SagePillBg,
-                                    unselectedIconColor = TextMuted,
-                                    unselectedTextColor = TextMuted
+                                    selectedIconColor = LumiPeriwinkle,
+                                    selectedTextColor = LumiPeriwinkle,
+                                    indicatorColor = Color(0x337D8EC2),
+                                    unselectedIconColor = LumiTextMuted,
+                                    unselectedTextColor = LumiTextMuted
                                 )
                             )
 
@@ -183,25 +186,45 @@ class MainActivity : ComponentActivity() {
                                 onClick = { selectedTab = 3 },
                                 icon = {
                                     Icon(
+                                        imageVector = Icons.Default.ChatBubbleOutline,
+                                        contentDescription = "Chat",
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                },
+                                label = { Text("Assistant", fontSize = 10.sp) },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = LumiPeriwinkle,
+                                    selectedTextColor = LumiPeriwinkle,
+                                    indicatorColor = Color(0x337D8EC2),
+                                    unselectedIconColor = LumiTextMuted,
+                                    unselectedTextColor = LumiTextMuted
+                                )
+                            )
+
+                            NavigationBarItem(
+                                selected = selectedTab == 4,
+                                onClick = { selectedTab = 4 },
+                                icon = {
+                                    Icon(
                                         imageVector = Icons.Default.Settings,
                                         contentDescription = "Settings",
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
-                                label = { Text("Settings", fontSize = 11.sp) },
+                                label = { Text("Settings", fontSize = 10.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = SageDark,
-                                    selectedTextColor = SageDark,
-                                    indicatorColor = SagePillBg,
-                                    unselectedIconColor = TextMuted,
-                                    unselectedTextColor = TextMuted
+                                    selectedIconColor = LumiPeriwinkle,
+                                    selectedTextColor = LumiPeriwinkle,
+                                    indicatorColor = Color(0x337D8EC2),
+                                    unselectedIconColor = LumiTextMuted,
+                                    unselectedTextColor = LumiTextMuted
                                 )
                             )
                         }
                     }
                 ) { innerPadding ->
                     when (selectedTab) {
-                        0 -> DashboardScreen(
+                        0 -> LumiHomeScreen(
                             summary = summary,
                             aiReport = aiReport,
                             selectedWorkout = selectedWorkout,
@@ -209,15 +232,18 @@ class MainActivity : ComponentActivity() {
                                 selectedWorkout = newCat
                                 aiReport = aiCoachEngine.generateLocalBriefing(summary, newCat)
                             },
-                            onOpenLiveBp = { selectedTab = 1 },
-                            onOpenSleepOverview = { selectedTab = 2 },
+                            onOpenChat = { selectedTab = 3 },
+                            onOpenSleep = { selectedTab = 2 },
+                            onOpenVitals = { selectedTab = 1 },
                             onSyncHealthConnect = syncRealData,
+                            onOpenHealthConnectSettings = {
+                                healthConnectManager.openHealthConnectSettings(this@MainActivity)
+                            },
                             modifier = Modifier.padding(innerPadding)
                         )
-                        1 -> BloodPressureLiveScreen(
+                        1 -> LumiVitalsScreen(
                             summary = summary,
                             onBack = { selectedTab = 0 },
-                            onTriggerReading = syncRealData,
                             modifier = Modifier.padding(innerPadding)
                         )
                         2 -> SleepOverviewScreen(
@@ -225,7 +251,13 @@ class MainActivity : ComponentActivity() {
                             onBack = { selectedTab = 0 },
                             modifier = Modifier.padding(innerPadding)
                         )
-                        3 -> SettingsScreen(
+                        3 -> LumiChatScreen(
+                            summary = summary,
+                            onBack = { selectedTab = 0 },
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                        4 -> LumiSettingsScreen(
+                            hasPermission = summary.hasHealthConnectPermission,
                             apiKey = apiKey,
                             onSaveApiKey = { newKey ->
                                 apiKey = newKey
@@ -233,13 +265,7 @@ class MainActivity : ComponentActivity() {
                                 Toast.makeText(this@MainActivity, "API Key Tersimpan!", Toast.LENGTH_SHORT).show()
                             },
                             onOpenHealthConnectSettings = {
-                                try {
-                                    val intent = Intent("androidx.health.ACTION_HEALTH_CONNECT_SETTINGS")
-                                    startActivity(intent)
-                                } catch (e: Exception) {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.healthdata"))
-                                    startActivity(intent)
-                                }
+                                healthConnectManager.openHealthConnectSettings(this@MainActivity)
                             },
                             modifier = Modifier.padding(innerPadding)
                         )
