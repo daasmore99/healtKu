@@ -231,7 +231,7 @@ fun AsclepiosAICoachScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = aiReport.briefingText,
+                    text = aiReport.morningBriefing,
                     fontSize = 13.sp,
                     lineHeight = 19.sp,
                     color = AsclepiosTextPrimary
@@ -239,7 +239,11 @@ fun AsclepiosAICoachScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                aiReport.keyTakeaways.forEach { takeaway ->
+                listOf(
+                    "Rekomendasi Latihan: ${aiReport.recommendedWorkout}",
+                    "Target Langkah Dinamis: ${aiReport.dynamicStepGoal} langkah",
+                    "Status CNS & Pemulihan: ${aiReport.cnsRecoveryStatus}"
+                ).forEach { takeaway ->
                     Row(
                         modifier = Modifier.padding(vertical = 3.dp),
                         verticalAlignment = Alignment.Top

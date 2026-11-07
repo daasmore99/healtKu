@@ -172,14 +172,14 @@ fun AISummaryScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Status: ${report.readinessStatus}",
+                            text = "Status: ${report.status}",
                             fontSize = 15.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Ink
                         )
                         Spacer(Modifier.height(2.dp))
                         Text(
-                            text = "Rekomendasi Beban: ${report.recommendedIntensity}",
+                            text = "Rekomendasi Beban: ${report.recommendedWorkout}",
                             fontSize = 11.sp,
                             color = Forest,
                             fontWeight = FontWeight.Medium
@@ -212,10 +212,9 @@ fun AISummaryScreen(
                             ) {
                                 Text(
                                     text = when (cat) {
-                                        WorkoutCategory.WEIGHTLIFTING -> "Gym / Beban"
+                                        WorkoutCategory.WEIGHTLIFTING -> "Beban / Gym"
                                         WorkoutCategory.RUNNING -> "Lari / Kardio"
-                                        WorkoutCategory.HYBRID_CROSSFIT -> "Crossfit"
-                                        WorkoutCategory.RECOVERY_YOGA -> "Yoga / Santai"
+                                        WorkoutCategory.BRISK_WALKING -> "Jalan Santai"
                                     },
                                     fontSize = 11.sp,
                                     fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal,
@@ -255,7 +254,7 @@ fun AISummaryScreen(
                         }
                     } else {
                         Text(
-                            text = report.briefingText,
+                            text = report.morningBriefing,
                             fontSize = 13.sp,
                             lineHeight = 19.sp,
                             color = Ink
@@ -266,7 +265,11 @@ fun AISummaryScreen(
                     Text("Poin Kunci & Tindakan Hari Ini:", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Forest)
                     Spacer(Modifier.height(8.dp))
 
-                    report.keyTakeaways.forEach { takeaway ->
+                    listOf(
+                        "Rekomendasi Aktivitas: ${report.recommendedWorkout}",
+                        "Target Langkah Dinamis: ${report.dynamicStepGoal} steps",
+                        "Status Saraf (CNS): ${report.cnsRecoveryStatus}"
+                    ).forEach { takeaway ->
                         Row(modifier = Modifier.padding(vertical = 3.dp), verticalAlignment = Alignment.Top) {
                             Text("✦ ", fontSize = 12.sp, color = Forest, fontWeight = FontWeight.Bold)
                             Text(takeaway, fontSize = 12.sp, color = Ink, lineHeight = 17.sp)
