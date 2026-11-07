@@ -15,12 +15,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.MonitorHeart
-import androidx.compose.material.icons.filled.Spa
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -35,24 +34,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.healthku.app.data.DailyHealthSummary
-import com.healthku.app.ui.theme.AmberSleep
-import com.healthku.app.ui.theme.BorderSubtle
-import com.healthku.app.ui.theme.CardWhite
-import com.healthku.app.ui.theme.CoralHeart
-import com.healthku.app.ui.theme.PeachCalories
-import com.healthku.app.ui.theme.SageGreenMedium
-import com.healthku.app.ui.theme.TextMuted
-import com.healthku.app.ui.theme.TextPrimary
-import com.healthku.app.ui.theme.TextSecondary
-import com.healthku.app.ui.theme.VioletBloodPressure
+import com.healthku.app.ui.theme.AsclepiosCard
+import com.healthku.app.ui.theme.AsclepiosCardBorder
+import com.healthku.app.ui.theme.AsclepiosTextMuted
+import com.healthku.app.ui.theme.AsclepiosTextPrimary
+import com.healthku.app.ui.theme.AsclepiosTextSecondary
+import com.healthku.app.ui.theme.MetricBpPink
+import com.healthku.app.ui.theme.MetricBpPinkBg
+import com.healthku.app.ui.theme.MetricCalorieBg
+import com.healthku.app.ui.theme.MetricCalorieOrange
+import com.healthku.app.ui.theme.MetricHeartBlue
+import com.healthku.app.ui.theme.MetricHeartBlueBg
+import com.healthku.app.ui.theme.SagePillGreen
 
 @Composable
 fun SmartMetricsSection(
     summary: DailyHealthSummary,
+    onOpenLiveBp: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        // Section Header
+        // Section 1 Header: Smart Health Metrics | See All
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -62,246 +64,349 @@ fun SmartMetricsSection(
         ) {
             Text(
                 text = "Smart Health Metrics",
-                fontSize = 18.sp,
+                fontSize = 19.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary
+                color = AsclepiosTextPrimary
             )
             Text(
-                text = "GloryFit Pro",
+                text = "See All",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
-                color = SageGreenMedium
+                color = AsclepiosTextSecondary
             )
         }
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
-        // Grid Row 1: Heart Rate & Blood Pressure/Stress
+        // 2-Column Grid (Heart Rate & Blood Pressure) matching screenshot exactly
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            MetricCardCompact(
-                modifier = Modifier.weight(1f),
-                title = "Heart Rate",
-                value = "${summary.heartRateBpm} bpm",
-                subtext = "Resting: ${summary.restingHeartRateBpm} bpm",
-                icon = Icons.Default.Favorite,
-                iconTint = CoralHeart,
-                iconBg = Color(0xFFFDEEEC),
-                sparklineData = summary.heartRateHistory,
-                sparklineColor = CoralHeart
-            )
-
-            MetricCardCompact(
-                modifier = Modifier.weight(1f),
-                title = "Blood Pressure",
-                value = "${summary.bloodPressureSys}/${summary.bloodPressureDia}",
-                subtext = "Optimal mmHg",
-                icon = Icons.Default.MonitorHeart,
-                iconTint = VioletBloodPressure,
-                iconBg = Color(0xFFF4EFF8),
-                sparklineData = summary.bloodPressureHistory,
-                sparklineColor = VioletBloodPressure
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Detailed Metric List Cards (Sleep, Walking, Calories)
-        DetailedMetricCard(
-            title = "Sleep Duration & Stages",
-            value = "${summary.sleepHours} hours",
-            subtext = "Deep Sleep: ${String.format("%.1f", summary.deepSleepHours)}h (${(summary.deepSleepHours/summary.sleepHours * 100).toInt()}%)",
-            icon = Icons.Default.Bedtime,
-            iconTint = AmberSleep,
-            iconBg = Color(0xFFFBF4E8),
-            sparklineData = summary.sleepHistory,
-            sparklineColor = AmberSleep
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        DetailedMetricCard(
-            title = "Walking & Activity",
-            value = "${summary.distanceKm} kilometer",
-            subtext = "${summary.steps} / ${summary.stepGoal} langkah",
-            icon = Icons.Default.DirectionsWalk,
-            iconTint = SageGreenMedium,
-            iconBg = Color(0xFFEBF3EE),
-            sparklineData = listOf(3.2f, 4.5f, 5.0f, 4.2f, summary.distanceKm),
-            sparklineColor = SageGreenMedium
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        DetailedMetricCard(
-            title = "Active Calories",
-            value = "${summary.caloriesBurned} kcal",
-            subtext = "Target pembakaran terpenuhi",
-            icon = Icons.Default.LocalFireDepartment,
-            iconTint = PeachCalories,
-            iconBg = Color(0xFFFCF0EB),
-            sparklineData = listOf(1400f, 1650f, 1500f, 1720f, summary.caloriesBurned.toFloat()),
-            sparklineColor = PeachCalories
-        )
-    }
-}
-
-@Composable
-fun MetricCardCompact(
-    title: String,
-    value: String,
-    subtext: String,
-    icon: ImageVector,
-    iconTint: Color,
-    iconBg: Color,
-    sparklineData: List<Float>,
-    sparklineColor: Color,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .border(1.dp, BorderSubtle, RoundedCornerShape(20.dp)),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = CardWhite),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            // Heart Rate Card
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(26.dp)),
+                shape = RoundedCornerShape(26.dp),
+                colors = CardDefaults.cardColors(containerColor = AsclepiosCard),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
-                Box(
+                Column(
                     modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(iconBg),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = iconTint,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
+                    // Top: Icon + Label
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(34.dp)
+                                .clip(CircleShape)
+                                .background(MetricHeartBlueBg),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = null,
+                                tint = MetricHeartBlue,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Heart Rate",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = AsclepiosTextPrimary
+                        )
+                    }
 
-                WaveSparkline(
-                    data = sparklineData,
-                    lineColor = sparklineColor,
-                    width = 46.dp,
-                    height = 24.dp
-                )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    // Center: 3D Anatomical Heart with glow
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(86.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        AnatomicalHeartGraphic(
+                            sizeDp = 76.dp,
+                            showGlow = true,
+                            glowColor = Color(0xFFD6EADB)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    // Bottom: Value + Sparkline
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.Bottom) {
+                            Text(
+                                text = if (summary.heartRateBpm != null) "${summary.heartRateBpm}" else "--",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = AsclepiosTextPrimary
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "bpm",
+                                fontSize = 12.sp,
+                                color = AsclepiosTextSecondary,
+                                modifier = Modifier.padding(bottom = 2.dp)
+                            )
+                        }
+
+                        WaveSparkline(
+                            data = if (summary.heartRateHistory.isNotEmpty()) summary.heartRateHistory else listOf(65f, 70f, 68f, 74f, 70f),
+                            lineColor = MetricHeartBlue,
+                            width = 38.dp,
+                            height = 20.dp
+                        )
+                    }
+                }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            // Blood Pressure Card
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(26.dp)),
+                shape = RoundedCornerShape(26.dp),
+                colors = CardDefaults.cardColors(containerColor = AsclepiosCard),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                onClick = onOpenLiveBp
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    // Top: Icon + Label
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(34.dp)
+                                .clip(CircleShape)
+                                .background(MetricBpPinkBg),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.MonitorHeart,
+                                contentDescription = null,
+                                tint = MetricBpPink,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Blood Press",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = AsclepiosTextPrimary
+                        )
+                    }
 
-            Text(
-                text = title,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-                color = TextSecondary
-            )
+                    Spacer(modifier = Modifier.height(10.dp))
 
-            Text(
-                text = value,
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextPrimary
-            )
+                    // Center: Anatomical Graphic with Pink/Red glow
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(86.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        AnatomicalHeartGraphic(
+                            sizeDp = 76.dp,
+                            showGlow = true,
+                            glowColor = Color(0xFFFCDCE3)
+                        )
+                    }
 
-            Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-            Text(
-                text = subtext,
-                fontSize = 11.sp,
-                color = TextMuted
-            )
+                    // Bottom: Value
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.Bottom) {
+                            Text(
+                                text = if (summary.bloodPressureSys != null) {
+                                    if (summary.bloodPressureDia != null) "${summary.bloodPressureSys}/${summary.bloodPressureDia}" else "${summary.bloodPressureSys}"
+                                } else "--",
+                                fontSize = if (summary.bloodPressureDia != null) 17.sp else 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = AsclepiosTextPrimary
+                            )
+                            Spacer(modifier = Modifier.width(3.dp))
+                            Text(
+                                text = "mmHg",
+                                fontSize = 11.sp,
+                                color = AsclepiosTextSecondary,
+                                modifier = Modifier.padding(bottom = 2.dp)
+                            )
+                        }
+
+                        WaveSparkline(
+                            data = listOf(118f, 122f, 120f, 124f, 120f),
+                            lineColor = MetricBpPink,
+                            width = 38.dp,
+                            height = 20.dp
+                        )
+                    }
+                }
+            }
         }
-    }
-}
 
-@Composable
-fun DetailedMetricCard(
-    title: String,
-    value: String,
-    subtext: String,
-    icon: ImageVector,
-    iconTint: Color,
-    iconBg: Color,
-    sparklineData: List<Float>,
-    sparklineColor: Color,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, BorderSubtle, RoundedCornerShape(18.dp)),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = CardWhite),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
+        Spacer(modifier = Modifier.height(18.dp))
+
+        // Section 2 Header: Smart Health Metrics | ...
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = 4.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(42.dp)
-                        .clip(CircleShape)
-                        .background(iconBg),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = iconTint,
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Column {
-                    Text(
-                        text = title,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = TextSecondary
-                    )
-                    Text(
-                        text = value,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary
-                    )
-                    Text(
-                        text = subtext,
-                        fontSize = 11.sp,
-                        color = TextMuted
-                    )
-                }
-            }
-
-            WaveSparkline(
-                data = sparklineData,
-                lineColor = sparklineColor,
-                width = 54.dp,
-                height = 26.dp
+            Text(
+                text = "Smart Health Metrics",
+                fontSize = 19.sp,
+                fontWeight = FontWeight.Bold,
+                color = AsclepiosTextPrimary
             )
+            Icon(
+                imageVector = Icons.Default.MoreHoriz,
+                contentDescription = null,
+                tint = AsclepiosTextSecondary,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        // Calories Burned Card (matching screenshot)
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(24.dp)),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = AsclepiosCard),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(46.dp)
+                            .clip(CircleShape)
+                            .background(MetricCalorieBg),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocalFireDepartment,
+                            contentDescription = null,
+                            tint = MetricCalorieOrange,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    Column {
+                        Text(
+                            text = "Calories Burned",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = AsclepiosTextPrimary
+                        )
+                        Text(
+                            text = if (summary.caloriesBurned > 0) "${summary.caloriesBurned} kcal aktif" else "Belum ada catatan kalori",
+                            fontSize = 12.sp,
+                            color = AsclepiosTextSecondary
+                        )
+                    }
+                }
+
+                Text(
+                    text = "${summary.caloriesBurned} kcal",
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = AsclepiosTextPrimary
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Daily Steps & Distance Card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(24.dp)),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = AsclepiosCard),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(46.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFE9F3EC)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.DirectionsWalk,
+                            contentDescription = null,
+                            tint = SagePillGreen,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    Column {
+                        Text(
+                            text = "Daily Walking & Cardio",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = AsclepiosTextPrimary
+                        )
+                        Text(
+                            text = "${summary.distanceKm} km jarak tempuh",
+                            fontSize = 12.sp,
+                            color = AsclepiosTextSecondary
+                        )
+                    }
+                }
+
+                Text(
+                    text = "${summary.steps} steps",
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = AsclepiosTextPrimary
+                )
+            }
         }
     }
 }

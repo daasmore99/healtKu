@@ -7,13 +7,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -21,7 +21,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -39,13 +38,14 @@ import com.healthku.app.data.AICoachReport
 import com.healthku.app.data.DailyHealthSummary
 import com.healthku.app.data.HealthConnectManager
 import com.healthku.app.data.WorkoutCategory
+import com.healthku.app.ui.screens.BloodPressureLiveScreen
 import com.healthku.app.ui.screens.DashboardScreen
 import com.healthku.app.ui.screens.SettingsScreen
-import com.healthku.app.ui.screens.WorkoutLogScreen
-import com.healthku.app.ui.theme.BgCream
-import com.healthku.app.ui.theme.CardWhite
+import com.healthku.app.ui.screens.SleepOverviewScreen
+import com.healthku.app.ui.theme.AsclepiosCard
 import com.healthku.app.ui.theme.HealthKuTheme
-import com.healthku.app.ui.theme.SageGreenDark
+import com.healthku.app.ui.theme.SageDark
+import com.healthku.app.ui.theme.SagePillBg
 import com.healthku.app.ui.theme.TextMuted
 import com.healthku.app.ui.theme.TextPrimary
 import kotlinx.coroutines.launch
@@ -59,9 +59,9 @@ class MainActivity : ComponentActivity() {
         PermissionController.createRequestPermissionResultContract()
     ) { granted ->
         if (granted.containsAll(healthConnectManager.permissions)) {
-            Toast.makeText(this, "Izin Health Connect Diberikan! Mengambil data...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Izin Health Connect Diberikan! Mengambil data real...", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this, "Sebagian izin Health Connect belum diaktifkan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Izin Health Connect belum lengkap", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -83,39 +83,40 @@ class MainActivity : ComponentActivity() {
                 var apiKey by remember { mutableStateOf(initialApiKey) }
                 val scope = rememberCoroutineScope()
 
-                // Function to refresh and sync data
-                val syncData: () -> Unit = {
+                // Function to pull real data from Health Connect
+                val syncRealData: () -> Unit = {
                     scope.launch {
                         if (healthConnectManager.isHealthConnectAvailable()) {
                             if (!healthConnectManager.hasAllPermissions()) {
                                 requestPermissions.launch(healthConnectManager.permissions)
                             }
-                            summary = healthConnectManager.readTodayData()
+                            val realData = healthConnectManager.readRealHealthData()
+                            summary = realData
                             aiReport = if (apiKey.isNotBlank()) {
-                                aiCoachEngine.queryGeminiCoach(apiKey, summary, selectedWorkout)
+                                aiCoachEngine.queryGeminiCoach(apiKey, realData, selectedWorkout)
                             } else {
-                                aiCoachEngine.generateLocalBriefing(summary, selectedWorkout)
+                                aiCoachEngine.generateLocalBriefing(realData, selectedWorkout)
                             }
-                            Toast.makeText(this@MainActivity, "Data Health Connect Terkini Diperbarui", Toast.LENGTH_SHORT).show()
+                            if (realData.hasHealthConnectPermission) {
+                                Toast.makeText(this@MainActivity, "Data Real Berhasil Diperbarui dari Health Connect", Toast.LENGTH_SHORT).show()
+                            }
                         } else {
-                            summary = healthConnectManager.readTodayData()
-                            aiReport = aiCoachEngine.generateLocalBriefing(summary, selectedWorkout)
-                            Toast.makeText(this@MainActivity, "Menggunakan Data Simulasi (Health Connect Belum Siap)", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "Health Connect belum terpasang di HP Anda", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
 
                 LaunchedEffect(Unit) {
-                    syncData()
+                    syncRealData()
                 }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         NavigationBar(
-                            containerColor = CardWhite,
+                            containerColor = AsclepiosCard,
                             contentColor = TextPrimary,
-                            tonalElevation = 4.dp
+                            tonalElevation = 0.dp
                         ) {
                             NavigationBarItem(
                                 selected = selectedTab == 0,
@@ -123,15 +124,15 @@ class MainActivity : ComponentActivity() {
                                 icon = {
                                     Icon(
                                         imageVector = Icons.Default.Home,
-                                        contentDescription = "Beranda",
+                                        contentDescription = "Home",
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
-                                label = { Text("HealthKu", fontSize = 11.sp) },
+                                label = { Text("Health Score", fontSize = 11.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = SageGreenDark,
-                                    selectedTextColor = SageGreenDark,
-                                    indicatorColor = Color(0xFFE4EFE7),
+                                    selectedIconColor = SageDark,
+                                    selectedTextColor = SageDark,
+                                    indicatorColor = SagePillBg,
                                     unselectedIconColor = TextMuted,
                                     unselectedTextColor = TextMuted
                                 )
@@ -142,16 +143,16 @@ class MainActivity : ComponentActivity() {
                                 onClick = { selectedTab = 1 },
                                 icon = {
                                     Icon(
-                                        imageVector = Icons.Default.FitnessCenter,
-                                        contentDescription = "Workout",
+                                        imageVector = Icons.Default.MonitorHeart,
+                                        contentDescription = "Blood Pressure",
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
-                                label = { Text("Workout", fontSize = 11.sp) },
+                                label = { Text("Pressure", fontSize = 11.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = SageGreenDark,
-                                    selectedTextColor = SageGreenDark,
-                                    indicatorColor = Color(0xFFE4EFE7),
+                                    selectedIconColor = SageDark,
+                                    selectedTextColor = SageDark,
+                                    indicatorColor = SagePillBg,
                                     unselectedIconColor = TextMuted,
                                     unselectedTextColor = TextMuted
                                 )
@@ -162,16 +163,36 @@ class MainActivity : ComponentActivity() {
                                 onClick = { selectedTab = 2 },
                                 icon = {
                                     Icon(
+                                        imageVector = Icons.Default.Bedtime,
+                                        contentDescription = "Sleep",
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                },
+                                label = { Text("Sleep Log", fontSize = 11.sp) },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = SageDark,
+                                    selectedTextColor = SageDark,
+                                    indicatorColor = SagePillBg,
+                                    unselectedIconColor = TextMuted,
+                                    unselectedTextColor = TextMuted
+                                )
+                            )
+
+                            NavigationBarItem(
+                                selected = selectedTab == 3,
+                                onClick = { selectedTab = 3 },
+                                icon = {
+                                    Icon(
                                         imageVector = Icons.Default.Settings,
-                                        contentDescription = "Pengaturan",
+                                        contentDescription = "Settings",
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
                                 label = { Text("Settings", fontSize = 11.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = SageGreenDark,
-                                    selectedTextColor = SageGreenDark,
-                                    indicatorColor = Color(0xFFE4EFE7),
+                                    selectedIconColor = SageDark,
+                                    selectedTextColor = SageDark,
+                                    indicatorColor = SagePillBg,
                                     unselectedIconColor = TextMuted,
                                     unselectedTextColor = TextMuted
                                 )
@@ -188,14 +209,23 @@ class MainActivity : ComponentActivity() {
                                 selectedWorkout = newCat
                                 aiReport = aiCoachEngine.generateLocalBriefing(summary, newCat)
                             },
-                            onSyncHealthConnect = syncData,
-                            onOpenSettings = { selectedTab = 2 },
+                            onOpenLiveBp = { selectedTab = 1 },
+                            onOpenSleepOverview = { selectedTab = 2 },
+                            onSyncHealthConnect = syncRealData,
                             modifier = Modifier.padding(innerPadding)
                         )
-                        1 -> WorkoutLogScreen(
+                        1 -> BloodPressureLiveScreen(
+                            summary = summary,
+                            onBack = { selectedTab = 0 },
+                            onTriggerReading = syncRealData,
                             modifier = Modifier.padding(innerPadding)
                         )
-                        2 -> SettingsScreen(
+                        2 -> SleepOverviewScreen(
+                            summary = summary,
+                            onBack = { selectedTab = 0 },
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                        3 -> SettingsScreen(
                             apiKey = apiKey,
                             onSaveApiKey = { newKey ->
                                 apiKey = newKey

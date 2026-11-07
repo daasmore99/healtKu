@@ -23,7 +23,9 @@ class AICoachEngine {
         summary: DailyHealthSummary,
         preferredWorkout: WorkoutCategory = WorkoutCategory.WEIGHTLIFTING
     ): AICoachReport {
-        // Calculate dynamic step recommendation
+        val score = summary.readinessScore ?: 75
+
+        // Dynamic step goal based on sport science
         val dynamicStepGoal = when (preferredWorkout) {
             WorkoutCategory.WEIGHTLIFTING -> 7000
             WorkoutCategory.RUNNING -> 11000
@@ -31,43 +33,52 @@ class AICoachEngine {
         }
 
         val cnsStatus = when {
-            summary.readinessScore >= 85 -> "Pulih Total (Sistem Saraf Optimal)"
-            summary.readinessScore >= 65 -> "Stabil (Volume Latihan Standar)"
-            else -> "Kelelahan Terdeteksi (Perlu Deload / Active Recovery)"
+            score >= 85 -> "Pulih Total (CNS Optimal)"
+            score >= 65 -> "Stabil (Volume Latihan Standar)"
+            else -> "Kelelahan Terdeteksi (Perlu Recovery)"
         }
 
         val morningBriefing = buildString {
-            append("Pagi, Atlet! Skor Kesiapan Fisikmu hari ini: ${summary.readinessScore}/100. ")
-            if (summary.readinessScore >= 85) {
-                append("Tidur semalam ${summary.sleepHours} jam dengan deep sleep ${String.format("%.1f", summary.deepSleepHours)} jam. ")
-                append("Resting Heart Rate kamu stabil di ${summary.restingHeartRateBpm} bpm—indikasi pemulihan sistem saraf pusat (CNS) dan otot berjalan prima. ")
-                append("Hari ini waktu yang tepat untuk push limit pada sesi ${preferredWorkout.displayName}. Target langkah dinamis: $dynamicStepGoal langkah!")
-            } else if (summary.readinessScore >= 65) {
-                append("Kondisi tubuhmu berada di batas aman (${summary.sleepHours} jam tidur). ")
-                append("Pertahankan konsistensi latihan dengan intensitas terukur. Jangan memaksakan PR hari ini. ")
-                append("Kunci target langkah di $dynamicStepGoal langkah untuk menjaga active metabolism.")
+            if (summary.readinessScore != null) {
+                append("Skor Kesiapan Fisik hari ini: $score/100 ($cnsStatus). ")
+                if (summary.sleepHours > 0f) {
+                    append("Durasi tidur semalam: ${String.format("%.1f", summary.sleepHours)} jam. ")
+                }
+                if (summary.restingHeartRateBpm != null) {
+                    append("Resting Heart Rate: ${summary.restingHeartRateBpm} bpm. ")
+                }
+                if (score >= 85) {
+                    append("Sistem saraf dan otot siap untuk beban maksimal. Target langkah dinamis: $dynamicStepGoal langkah!")
+                } else if (score >= 65) {
+                    append("Kondisi tubuh stabil. Jalankan program $preferredWorkout dengan volume terukur.")
+                } else {
+                    append("Tubuh membutuhkan fase pemulihan. Prioritaskan peregangan atau jalan santai Zone 2.")
+                }
             } else {
-                append("PERINGATAN FISIOLOGIS: Tidurmu hanya ${summary.sleepHours} jam. ")
-                append("Sintesis protein terhambat dan hormon kortisol berpotensi naik jika dipaksa angkat beban berat. ")
-                append("Saran disiplin: Turunkan beban 30% atau alihkan ke jalan cepat 30 menit (Zone 2) untuk sirkulasi pembuangan asam laktat.")
+                append("Menunggu sinkronisasi data dari Health Connect. Buka aplikasi Health Connect dan izinkan pembacaan data.")
             }
         }
 
         val eveningRecap = buildString {
             val stepDiff = summary.steps - dynamicStepGoal
             append("Evaluasi Disiplin Malam: ")
-            if (stepDiff >= 0) {
-                append("Target $dynamicStepGoal langkah tuntas (${summary.steps} langkah tercapai). ")
-                append("Estimasi pembakaran kalori aktif ${summary.caloriesBurned} kcal. Eksekusi hari ini solid! ")
+            if (summary.steps > 0) {
+                if (stepDiff >= 0) {
+                    append("Target $dynamicStepGoal langkah berhasil tercapai (${summary.steps} langkah). ")
+                } else {
+                    append("Tercatat ${summary.steps} langkah dari target $dynamicStepGoal langkah. ")
+                }
+                if (summary.caloriesBurned > 0) {
+                    append("Pembakaran kalori aktif: ${summary.caloriesBurned} kcal. ")
+                }
             } else {
-                append("Kamu masih kurang ${-stepDiff} langkah dari target $dynamicStepGoal. ")
-                append("Jangan jadikan alasan. Luangkan 15 menit jalan santai sekarang sebelum tidur. ")
+                append("Belum ada aktivitas langkah yang tercatat di Health Connect hari ini. ")
             }
-            append("Untuk menjaga regenerasi sel otot maksimal, kunci jam tidurmu paling lambat pukul 22.30 malam ini.")
+            append("Jaga jadwal tidur konsisten malam ini.")
         }
 
         return AICoachReport(
-            readinessScore = summary.readinessScore,
+            readinessScore = score,
             status = summary.readinessStatus,
             morningBriefing = morningBriefing,
             eveningRecap = eveningRecap,
@@ -94,22 +105,16 @@ class AICoachEngine {
             Kamu adalah AI Health & Athletic Coach pribadi bernama "HealthKu Coach".
             Karaktermu: TEGAS, DISIPLIN, namun SANGAT SAINTIFIK dan berbasis data fisiologi olahraga (sport science).
             
-            Data atlet hari ini dari Smartwatch & Health Connect:
+            Data atlet hari ini dari Health Connect (DATA ASLI):
             - Langkah hari ini: ${summary.steps} langkah
-            - Detak jantung terkini: ${summary.heartRateBpm} bpm
-            - Resting Heart Rate: ${summary.restingHeartRateBpm} bpm
-            - Total tidur semalam: ${summary.sleepHours} jam (Deep sleep: ${summary.deepSleepHours} jam)
+            - Detak jantung terkini: ${summary.heartRateBpm ?: "Belum ada"} bpm
+            - Resting Heart Rate: ${summary.restingHeartRateBpm ?: "Belum ada"} bpm
+            - Total tidur semalam: ${summary.sleepHours} jam
             - Kalori terbakar: ${summary.caloriesBurned} kcal
             - Jarak tempuh: ${summary.distanceKm} km
-            - Kategori latihan yang direncanakan: ${workoutCategory.displayName}
+            - Kategori latihan: ${workoutCategory.displayName}
             
-            Tugasmu:
-            1. Berikan Skor Kesiapan (Readiness Score 1-100).
-            2. Buat Morning Readiness Briefing (analisa deep sleep, resting heart rate, rekomendasi intensitas).
-            3. Buat Evening Recap & Sleep Lockdown (evaluasi pencapaian, jam tidur yang wajib dipatuhi).
-            4. Tentukan target langkah dinamis yang optimal.
-            
-            Kirimkan respon HANYA dalam format JSON valid berikut tanpa markdown codeblock:
+            Berikan respon JSON valid:
             {
                "readinessScore": 88,
                "status": "Prime Zone",

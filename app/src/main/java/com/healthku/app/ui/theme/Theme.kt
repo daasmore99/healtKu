@@ -11,17 +11,17 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = SageGreenDark,
-    onPrimary = CardWhite,
-    secondary = SageGreenMedium,
-    onSecondary = CardWhite,
-    tertiary = CoralHeart,
-    background = BgCream,
-    surface = CardWhite,
-    onBackground = TextPrimary,
-    onSurface = TextPrimary,
-    surfaceVariant = CardCream,
-    outline = BorderSubtle
+    primary = SageDark,
+    onPrimary = AsclepiosCard,
+    secondary = SagePillGreen,
+    onSecondary = AsclepiosCard,
+    tertiary = MetricBpPink,
+    background = AsclepiosBg,
+    surface = AsclepiosCard,
+    onBackground = AsclepiosTextPrimary,
+    onSurface = AsclepiosTextPrimary,
+    surfaceVariant = AsclepiosSearchBg,
+    outline = AsclepiosCardBorder
 )
 
 @Composable
@@ -34,7 +34,7 @@ fun HealthKuTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = BgCream.toArgb()
+            window.statusBarColor = AsclepiosBg.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
         }
     }

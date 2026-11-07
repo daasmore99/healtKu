@@ -16,11 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Key
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Sensors
-import androidx.compose.material.icons.filled.Watch
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,14 +38,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.healthku.app.ui.theme.BgCream
-import com.healthku.app.ui.theme.BorderSubtle
-import com.healthku.app.ui.theme.CardWhite
-import com.healthku.app.ui.theme.SageGreenDark
-import com.healthku.app.ui.theme.SageGreenMedium
-import com.healthku.app.ui.theme.TextMuted
-import com.healthku.app.ui.theme.TextPrimary
-import com.healthku.app.ui.theme.TextSecondary
+import com.healthku.app.ui.theme.AsclepiosBg
+import com.healthku.app.ui.theme.AsclepiosCard
+import com.healthku.app.ui.theme.AsclepiosCardBorder
+import com.healthku.app.ui.theme.AsclepiosTextPrimary
+import com.healthku.app.ui.theme.AsclepiosTextSecondary
+import com.healthku.app.ui.theme.SageDark
+import com.healthku.app.ui.theme.SagePillBg
+import com.healthku.app.ui.theme.SagePillGreen
 
 @Composable
 fun SettingsScreen(
@@ -61,35 +59,35 @@ fun SettingsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BgCream)
+            .background(AsclepiosBg)
             .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
         Text(
             text = "Pengaturan & Integrasi",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = TextPrimary
+            color = AsclepiosTextPrimary
         )
         Text(
-            text = "Koneksi Smartwatch SKMEI DM56 & Health Connect",
+            text = "Hubungkan data real langsung ke Android Health Connect",
             fontSize = 13.sp,
-            color = TextSecondary
+            color = AsclepiosTextSecondary
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Device Connection Card
+        // Health Connect Direct Integration Card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, BorderSubtle, RoundedCornerShape(20.dp)),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = CardWhite)
+                .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(24.dp)),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = AsclepiosCard)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(18.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -101,13 +99,13 @@ fun SettingsScreen(
                             modifier = Modifier
                                 .size(42.dp)
                                 .clip(CircleShape)
-                                .background(Color(0xFFEBF3EE)),
+                                .background(SagePillBg),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Watch,
+                                imageVector = Icons.Default.Sensors,
                                 contentDescription = null,
-                                tint = SageGreenDark,
+                                tint = SagePillGreen,
                                 modifier = Modifier.size(22.dp)
                             )
                         }
@@ -116,92 +114,82 @@ fun SettingsScreen(
 
                         Column {
                             Text(
-                                text = "SKMEI DM56",
+                                text = "Android Health Connect",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = TextPrimary
+                                color = AsclepiosTextPrimary
                             )
                             Text(
-                                text = "Via Aplikasi GloryFit Pro",
+                                text = "Pusat Data Kesehatan Resmi Google",
                                 fontSize = 12.sp,
-                                color = SageGreenMedium
+                                color = SagePillGreen
                             )
                         }
                     }
 
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFFE4EFE7))
-                            .padding(horizontal = 10.dp, vertical = 4.dp)
-                    ) {
-                        Text(
-                            text = "Tersambung",
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = SageGreenDark
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Verified,
+                        contentDescription = null,
+                        tint = SagePillGreen,
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
-                    text = "Petunjuk Sinkronisasi:",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = TextPrimary
-                )
-                Text(
-                    text = "1. Buka aplikasi GloryFit Pro di HP kamu\n2. Masuk ke tab 'Saya / Me' > Layanan Pihak Ketiga\n3. Hubungkan ke Google Fit / Health Connect\n4. Data otomatis tersinkron ke HealthKu!",
+                    text = "Aplikasi ini membaca data asli (real-time) langsung dari Health Connect di HP Anda tanpa data rekayasa/dummy:\n• Langkah & Jarak Harian\n• Detak Jantung & Resting HR\n• Tekanan Darah (SYS/DIA)\n• Saturasi Oksigen (SpO2)\n• Sesi Tidur & Durasi",
                     fontSize = 12.sp,
                     lineHeight = 18.sp,
-                    color = TextSecondary,
-                    modifier = Modifier.padding(top = 4.dp)
+                    color = AsclepiosTextSecondary
                 )
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = onOpenHealthConnectSettings,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFF3EFE7),
-                        contentColor = TextPrimary
+                        containerColor = SagePillBg,
+                        contentColor = SagePillGreen
                     )
                 ) {
                     Icon(
                         imageVector = Icons.Default.Sensors,
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Buka Pengaturan Health Connect", fontSize = 13.sp)
+                    Text(
+                        text = "Kelola Izin di Health Connect",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // AI Gemini API Key Card
+        // Gemini AI API Key Card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, BorderSubtle, RoundedCornerShape(20.dp)),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = CardWhite)
+                .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(24.dp)),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = AsclepiosCard)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(18.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.Key,
                         contentDescription = null,
-                        tint = SageGreenDark,
+                        tint = SageDark,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -209,17 +197,17 @@ fun SettingsScreen(
                         text = "Google Gemini API Key (Opsional)",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary
+                        color = AsclepiosTextPrimary
                     )
                 }
 
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text = "Jika dikosongkan, AI Coach tetap berjalan 100% offline menggunakan mesin Sport Science bawaan. Jika diisi, AI akan menghasilkan respon cerdas dinamis via Gemini.",
+                    text = "Jika dikosongkan, AI Coach tetap aktif offline menggunakan mesin sport science bawaan. Jika diisi, AI akan menghasilkan rekomendasi dinamis via Google Gemini.",
                     fontSize = 12.sp,
                     lineHeight = 17.sp,
-                    color = TextSecondary
+                    color = AsclepiosTextSecondary
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -230,16 +218,16 @@ fun SettingsScreen(
                     label = { Text("Masukkan API Key Gemini") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(14.dp)
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Button(
                     onClick = { onSaveApiKey(keyInput) },
                     modifier = Modifier.align(Alignment.End),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = SageGreenDark)
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SageDark)
                 ) {
                     Text("Simpan Key")
                 }

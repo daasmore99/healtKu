@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -24,25 +22,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.healthku.app.ui.theme.BorderSubtle
-import com.healthku.app.ui.theme.CardWhite
-import com.healthku.app.ui.theme.SageWash
-import com.healthku.app.ui.theme.TextMuted
-import com.healthku.app.ui.theme.TextPrimary
-import com.healthku.app.ui.theme.TextSecondary
+import com.healthku.app.ui.theme.AsclepiosCard
+import com.healthku.app.ui.theme.AsclepiosCardBorder
+import com.healthku.app.ui.theme.AsclepiosTextMuted
+import com.healthku.app.ui.theme.AsclepiosTextPrimary
+import com.healthku.app.ui.theme.AsclepiosTextSecondary
+import com.healthku.app.ui.theme.SagePillBg
+import com.healthku.app.ui.theme.SagePillGreen
 
 @Composable
 fun HealthScoreCard(
-    score: Int,
+    score: Int?,
     statusText: String,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        // Section Title
+        // Section Header
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -52,27 +50,27 @@ fun HealthScoreCard(
         ) {
             Text(
                 text = "Health Score",
-                fontSize = 18.sp,
+                fontSize = 19.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary
+                color = AsclepiosTextPrimary
             )
             Icon(
                 imageVector = Icons.Default.MoreHoriz,
                 contentDescription = null,
-                tint = TextSecondary,
+                tint = AsclepiosTextSecondary,
                 modifier = Modifier.size(20.dp)
             )
         }
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Main Asclepios Score Card
+        // Main Asclepios Card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, BorderSubtle, RoundedCornerShape(24.dp)),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = CardWhite),
+                .border(1.dp, AsclepiosCardBorder, RoundedCornerShape(26.dp)),
+            shape = RoundedCornerShape(26.dp),
+            colors = CardDefaults.cardColors(containerColor = AsclepiosCard),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Row(
@@ -82,75 +80,63 @@ fun HealthScoreCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Left Column: Description & Status
+                // Left Column
                 Column(modifier = Modifier.weight(1f).padding(end = 12.dp)) {
                     Text(
-                        text = "Readiness Score",
-                        fontSize = 18.sp,
+                        text = "Asclepios Score",
+                        fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary
+                        color = AsclepiosTextPrimary
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "Berdasarkan data tidur, detak jantung & aktivitas dari Smartwatch, performamu berada di zona $statusText.",
-                        fontSize = 13.sp,
-                        lineHeight = 18.sp,
-                        color = TextSecondary
+                        text = if (score != null) {
+                            "Based on your data, we think your health status is above average"
+                        } else {
+                            "Sinkronkan data Health Connect untuk mengkalkulasi skor kesehatanmu secara real."
+                        },
+                        fontSize = 12.sp,
+                        lineHeight = 17.sp,
+                        color = AsclepiosTextSecondary
                     )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    // Status Pill
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(SageWash)
-                            .padding(horizontal = 10.dp, vertical = 4.dp)
-                    ) {
-                        Text(
-                            text = "● $statusText",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF2D5A43)
-                        )
-                    }
                 }
 
-                // Right Column: Vertical Score Selector (Like the image: 87, 88, 89)
+                // Right Column: Vertical Selector (87, 88, 89)
+                val displayScore = score ?: 88
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
-                        text = "${score - 1}",
-                        fontSize = 13.sp,
+                        text = if (score != null) "${displayScore - 1}" else "--",
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
-                        color = TextMuted
+                        color = AsclepiosTextMuted
                     )
 
-                    // Hero Score Pill
+                    // Rounded Pill
                     Box(
                         modifier = Modifier
-                            .size(width = 54.dp, height = 46.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(Color(0xFFE2EFE7)),
+                            .size(width = 56.dp, height = 48.dp)
+                            .clip(RoundedCornerShape(18.dp))
+                            .background(SagePillBg),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "$score",
+                            text = if (score != null) "$displayScore" else "--",
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF234B38)
+                            color = SagePillGreen
                         )
                     }
 
                     Text(
-                        text = "${score + 1}",
-                        fontSize = 13.sp,
+                        text = if (score != null) "${displayScore + 1}" else "--",
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
-                        color = TextMuted
+                        color = AsclepiosTextMuted
                     )
                 }
             }
