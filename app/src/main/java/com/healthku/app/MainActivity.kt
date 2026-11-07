@@ -6,17 +6,16 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bedtime
-import androidx.compose.material.icons.filled.ChatBubbleOutline
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MonitorHeart
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -36,21 +35,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.health.connect.client.PermissionController
 import com.healthku.app.ai.AICoachEngine
-import com.healthku.app.data.AICoachReport
 import com.healthku.app.data.DailyHealthSummary
 import com.healthku.app.data.HealthConnectManager
 import com.healthku.app.data.WorkoutCategory
-import com.healthku.app.ui.screens.LumiChatScreen
-import com.healthku.app.ui.screens.LumiHomeScreen
-import com.healthku.app.ui.screens.LumiSettingsScreen
-import com.healthku.app.ui.screens.LumiVitalsScreen
-import com.healthku.app.ui.screens.SleepOverviewScreen
+import com.healthku.app.ui.screens.AsclepiosAICoachScreen
+import com.healthku.app.ui.screens.AsclepiosBloodPressureScreen
+import com.healthku.app.ui.screens.AsclepiosHomeScreen
+import com.healthku.app.ui.screens.AsclepiosSleepScreen
+import com.healthku.app.ui.theme.AsclepiosBg
+import com.healthku.app.ui.theme.AsclepiosCard
+import com.healthku.app.ui.theme.AsclepiosCardBorder
+import com.healthku.app.ui.theme.AsclepiosTextMuted
 import com.healthku.app.ui.theme.HealthKuTheme
-import com.healthku.app.ui.theme.LumiCardBorderDark
-import com.healthku.app.ui.theme.LumiCardDark
-import com.healthku.app.ui.theme.LumiPeriwinkle
-import com.healthku.app.ui.theme.LumiTextMuted
-import com.healthku.app.ui.theme.LumiTextPrimary
+import com.healthku.app.ui.theme.SagePillBg
+import com.healthku.app.ui.theme.SagePillGreen
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -62,9 +60,9 @@ class MainActivity : ComponentActivity() {
         PermissionController.createRequestPermissionResultContract()
     ) { granted ->
         if (granted.containsAll(healthConnectManager.permissions)) {
-            Toast.makeText(this, "Izin Health Connect Aktif! Mengambil data real...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Izin Health Connect Diberikan! Mengambil data sensor...", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this, "Izin Health Connect belum lengkap", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Izin belum lengkap. Anda juga bisa membukanya via Buka Izin di HP.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -79,14 +77,14 @@ class MainActivity : ComponentActivity() {
             HealthKuTheme {
                 var selectedTab by remember { mutableIntStateOf(0) }
                 var summary by remember { mutableStateOf(DailyHealthSummary()) }
-                var selectedWorkout by remember { mutableStateOf(WorkoutCategory.WEIGHTLIFTING) }
-                var aiReport by remember {
-                    mutableStateOf(aiCoachEngine.generateLocalBriefing(summary, selectedWorkout))
-                }
                 var apiKey by remember { mutableStateOf(initialApiKey) }
                 val scope = rememberCoroutineScope()
 
-                // Function to pull real data from Health Connect
+                var aiReport by remember {
+                    mutableStateOf(aiCoachEngine.generateLocalBriefing(summary, WorkoutCategory.WEIGHTLIFTING))
+                }
+
+                // Sync data real from Health Connect
                 val syncRealData: () -> Unit = {
                     scope.launch {
                         if (healthConnectManager.isHealthConnectAvailable()) {
@@ -96,12 +94,12 @@ class MainActivity : ComponentActivity() {
                             val realData = healthConnectManager.readRealHealthData()
                             summary = realData
                             aiReport = if (apiKey.isNotBlank()) {
-                                aiCoachEngine.queryGeminiCoach(apiKey, realData, selectedWorkout)
+                                aiCoachEngine.queryGeminiCoach(apiKey, realData, WorkoutCategory.WEIGHTLIFTING)
                             } else {
-                                aiCoachEngine.generateLocalBriefing(realData, selectedWorkout)
+                                aiCoachEngine.generateLocalBriefing(realData, WorkoutCategory.WEIGHTLIFTING)
                             }
                             if (realData.hasHealthConnectPermission) {
-                                Toast.makeText(this@MainActivity, "Data Real Terkini Diperbarui", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@MainActivity, "Data Real Tersinkron", Toast.LENGTH_SHORT).show()
                             }
                         } else {
                             Toast.makeText(this@MainActivity, "Health Connect belum terpasang di HP Anda", Toast.LENGTH_LONG).show()
@@ -114,12 +112,14 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(AsclepiosBg),
                     bottomBar = {
                         NavigationBar(
-                            containerColor = LumiCardDark,
-                            contentColor = LumiTextPrimary,
-                            tonalElevation = 8.dp
+                            containerColor = AsclepiosCard,
+                            tonalElevation = 0.dp,
+                            modifier = Modifier.border(0.5.dp, AsclepiosCardBorder)
                         ) {
                             NavigationBarItem(
                                 selected = selectedTab == 0,
@@ -131,13 +131,13 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
-                                label = { Text("LUMI", fontSize = 10.sp) },
+                                label = { Text("Home", fontSize = 10.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = LumiPeriwinkle,
-                                    selectedTextColor = LumiPeriwinkle,
-                                    indicatorColor = Color(0x337D8EC2),
-                                    unselectedIconColor = LumiTextMuted,
-                                    unselectedTextColor = LumiTextMuted
+                                    selectedIconColor = SagePillGreen,
+                                    selectedTextColor = SagePillGreen,
+                                    indicatorColor = SagePillBg,
+                                    unselectedIconColor = AsclepiosTextMuted,
+                                    unselectedTextColor = AsclepiosTextMuted
                                 )
                             )
 
@@ -146,18 +146,18 @@ class MainActivity : ComponentActivity() {
                                 onClick = { selectedTab = 1 },
                                 icon = {
                                     Icon(
-                                        imageVector = Icons.Default.Favorite,
+                                        imageVector = Icons.Default.MonitorHeart,
                                         contentDescription = "Vitals",
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
-                                label = { Text("Vitals", fontSize = 10.sp) },
+                                label = { Text("Pressure", fontSize = 10.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = LumiPeriwinkle,
-                                    selectedTextColor = LumiPeriwinkle,
-                                    indicatorColor = Color(0x337D8EC2),
-                                    unselectedIconColor = LumiTextMuted,
-                                    unselectedTextColor = LumiTextMuted
+                                    selectedIconColor = SagePillGreen,
+                                    selectedTextColor = SagePillGreen,
+                                    indicatorColor = SagePillBg,
+                                    unselectedIconColor = AsclepiosTextMuted,
+                                    unselectedTextColor = AsclepiosTextMuted
                                 )
                             )
 
@@ -173,11 +173,11 @@ class MainActivity : ComponentActivity() {
                                 },
                                 label = { Text("Sleep", fontSize = 10.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = LumiPeriwinkle,
-                                    selectedTextColor = LumiPeriwinkle,
-                                    indicatorColor = Color(0x337D8EC2),
-                                    unselectedIconColor = LumiTextMuted,
-                                    unselectedTextColor = LumiTextMuted
+                                    selectedIconColor = SagePillGreen,
+                                    selectedTextColor = SagePillGreen,
+                                    indicatorColor = SagePillBg,
+                                    unselectedIconColor = AsclepiosTextMuted,
+                                    unselectedTextColor = AsclepiosTextMuted
                                 )
                             )
 
@@ -186,84 +186,53 @@ class MainActivity : ComponentActivity() {
                                 onClick = { selectedTab = 3 },
                                 icon = {
                                     Icon(
-                                        imageVector = Icons.Default.ChatBubbleOutline,
-                                        contentDescription = "Chat",
+                                        imageVector = Icons.Default.AutoAwesome,
+                                        contentDescription = "Assistant",
                                         modifier = Modifier.size(22.dp)
                                     )
                                 },
                                 label = { Text("Assistant", fontSize = 10.sp) },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = LumiPeriwinkle,
-                                    selectedTextColor = LumiPeriwinkle,
-                                    indicatorColor = Color(0x337D8EC2),
-                                    unselectedIconColor = LumiTextMuted,
-                                    unselectedTextColor = LumiTextMuted
-                                )
-                            )
-
-                            NavigationBarItem(
-                                selected = selectedTab == 4,
-                                onClick = { selectedTab = 4 },
-                                icon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Settings,
-                                        contentDescription = "Settings",
-                                        modifier = Modifier.size(22.dp)
-                                    )
-                                },
-                                label = { Text("Settings", fontSize = 10.sp) },
-                                colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = LumiPeriwinkle,
-                                    selectedTextColor = LumiPeriwinkle,
-                                    indicatorColor = Color(0x337D8EC2),
-                                    unselectedIconColor = LumiTextMuted,
-                                    unselectedTextColor = LumiTextMuted
+                                    selectedIconColor = SagePillGreen,
+                                    selectedTextColor = SagePillGreen,
+                                    indicatorColor = SagePillBg,
+                                    unselectedIconColor = AsclepiosTextMuted,
+                                    unselectedTextColor = AsclepiosTextMuted
                                 )
                             )
                         }
                     }
                 ) { innerPadding ->
                     when (selectedTab) {
-                        0 -> LumiHomeScreen(
+                        0 -> AsclepiosHomeScreen(
                             summary = summary,
-                            aiReport = aiReport,
-                            selectedWorkout = selectedWorkout,
-                            onWorkoutChange = { newCat ->
-                                selectedWorkout = newCat
-                                aiReport = aiCoachEngine.generateLocalBriefing(summary, newCat)
-                            },
-                            onOpenChat = { selectedTab = 3 },
-                            onOpenSleep = { selectedTab = 2 },
-                            onOpenVitals = { selectedTab = 1 },
+                            onOpenLiveBp = { selectedTab = 1 },
                             onSyncHealthConnect = syncRealData,
                             onOpenHealthConnectSettings = {
                                 healthConnectManager.openHealthConnectSettings(this@MainActivity)
                             },
                             modifier = Modifier.padding(innerPadding)
                         )
-                        1 -> LumiVitalsScreen(
+                        1 -> AsclepiosBloodPressureScreen(
                             summary = summary,
                             onBack = { selectedTab = 0 },
                             modifier = Modifier.padding(innerPadding)
                         )
-                        2 -> SleepOverviewScreen(
+                        2 -> AsclepiosSleepScreen(
                             summary = summary,
                             onBack = { selectedTab = 0 },
                             modifier = Modifier.padding(innerPadding)
                         )
-                        3 -> LumiChatScreen(
+                        3 -> AsclepiosAICoachScreen(
                             summary = summary,
-                            onBack = { selectedTab = 0 },
-                            modifier = Modifier.padding(innerPadding)
-                        )
-                        4 -> LumiSettingsScreen(
-                            hasPermission = summary.hasHealthConnectPermission,
+                            aiReport = aiReport,
                             apiKey = apiKey,
                             onSaveApiKey = { newKey ->
                                 apiKey = newKey
                                 sharedPref.edit().putString("gemini_api_key", newKey).apply()
-                                Toast.makeText(this@MainActivity, "API Key Tersimpan!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@MainActivity, "API Key Disimpan!", Toast.LENGTH_SHORT).show()
                             },
+                            onSyncHealthConnect = syncRealData,
                             onOpenHealthConnectSettings = {
                                 healthConnectManager.openHealthConnectSettings(this@MainActivity)
                             },

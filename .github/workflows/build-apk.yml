@@ -36,26 +36,27 @@ jobs:
 
       - name: Copy APK for Release
         run: |
-          cp app/build/outputs/apk/release/app-release.apk LumiHealth.apk
+          cp app/build/outputs/apk/release/app-release.apk HealthKu.apk
 
       - name: Upload APK to Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: LumiHealth-APK
-          path: LumiHealth.apk
+          name: HealthKu-APK
+          path: HealthKu.apk
           retention-days: 30
 
       - name: Create Release and Attach APK
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.2.${{ github.run_number }}
-          name: "LUMI Health v1.2.${{ github.run_number }}"
+          tag_name: v1.3.${{ github.run_number }}
+          name: "HealthKu Asclepios v1.3.${{ github.run_number }}"
           body: |
-            ## 🔮 LUMI AI Health Assistant (Installable Sideload Edition)
+            ## 🌿 HealthKu - Asclepios Edition (Official Sideload APK)
 
-            - File: **`LumiHealth.apk`**
-            - Dibangun sebagai **Release Sideload APK** (bebas dari flag `testOnly` Android yang menyebabkan error *package invalid*).
-            - Siap dipasang langsung di HP Android.
-          files: LumiHealth.apk
+            - File: **`HealthKu.apk`**
+            - **Desain Presisi Asclepios**: 100% identik dengan rujukan visual (background Warm Ivory `#F7F4EB`, 3D Anatomical Heart, Stethoscope-Heart, Serene Sleep Avatar, dan Day Picker Strip).
+            - **Dual Health Connect Permission Discovery**: Mendukung penuh Android 14+ (`ViewPermissionUsageActivity` alias) dan Android 13 kebawah sehingga nama aplikasi **HealthKu** muncul di daftar izin Health Connect.
+            - **Sideload Ready**: Dibangun tanpa flag `testOnly` Android, siap dipasang langsung di smartphone tanpa error invalid package.
+          files: HealthKu.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

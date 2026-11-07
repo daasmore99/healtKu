@@ -2,53 +2,53 @@ package com.healthku.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// LUMI - AI Health Assistant Palette (Afterglow Design System)
-val LumiCanvasDark = Color(0xFF090A0E)
-val LumiCardDark = Color(0xFF13151D)
-val LumiCardBorderDark = Color(0xFF222634)
-val LumiCardSurfaceHover = Color(0xFF1A1D27)
+// Exact Asclepios Theme Palette (Matching Reference Image)
+val AsclepiosBg = Color(0xFFF7F4EB)
+val AsclepiosCard = Color(0xFFFFFFFF)
+val AsclepiosCardBorder = Color(0xFFEBE5D8)
+val AsclepiosSearchBg = Color(0xFFEFE8DB)
 
-// Soft Ethereal Accents from LUMI Design
-val LumiPeriwinkle = Color(0xFF7D8EC2)
-val LumiPeriwinkleGlow = Color(0x337D8EC2)
-val LumiAmber = Color(0xFFE2A55E)
-val LumiAmberGlow = Color(0x33E2A55E)
-val LumiCoral = Color(0xFFF16751)
-val LumiCoralGlow = Color(0x33F16751)
-val LumiSage = Color(0xFF5E8C4A)
-val LumiSageGlow = Color(0x335E8C4A)
-val LumiLilac = Color(0xFFC3B5B4)
-val LumiLilacSoft = Color(0xFFEBE4ED)
+// Green Tones
+val SageDark = Color(0xFF265135)
+val SagePillGreen = Color(0xFF2E5B3D)
+val SagePillBg = Color(0xFFD8EAD9)
+val SageSoftWash = Color(0xFFE0ECE1)
+val SleepCardBg = Color(0xFFCCE2D0)
+
+// Metric Accents
+val MetricHeartBlue = Color(0xFF5A8DF4)
+val MetricHeartBlueBg = Color(0xFFEAF1FE)
+val MetricBpPink = Color(0xFFEB607A)
+val MetricBpPinkBg = Color(0xFFFDEEF1)
+val MetricCalorieOrange = Color(0xFFEA8641)
+val MetricCalorieBg = Color(0xFFFDF1EA)
+val MetricOxygenCyan = Color(0xFF38B2AC)
+val MetricOxygenBg = Color(0xFFE6FFFA)
 
 // Typography & Neutrals
-val LumiTextPrimary = Color(0xFFF5F6FA)
-val LumiTextSecondary = Color(0xFF8D96A8)
-val LumiTextMuted = Color(0xFF525968)
-val LumiCapsule = Color(0xFF1F222E)
+val AsclepiosTextPrimary = Color(0xFF1B231D)
+val AsclepiosTextSecondary = Color(0xFF758178)
+val AsclepiosTextMuted = Color(0xFFA5B0A8)
+val BlackCapsule = Color(0xFF1A1C1A)
 
-// Backward Compatibility Aliases for components
-val AsclepiosBg = LumiCanvasDark
-val AsclepiosCard = LumiCardDark
-val AsclepiosCardBorder = LumiCardBorderDark
-val AsclepiosSearchBg = LumiCardDark
-val AsclepiosTextPrimary = LumiTextPrimary
-val AsclepiosTextSecondary = LumiTextSecondary
-val AsclepiosTextMuted = LumiTextMuted
-val SageDark = LumiSage
-val SagePillGreen = LumiSage
-val SagePillBg = Color(0xFF1B2A18)
-val MetricHeartBlue = LumiPeriwinkle
-val MetricBpPink = LumiCoral
-val MetricCalorieOrange = LumiAmber
-val MetricOxygenCyan = Color(0xFF48B5AC)
-val BlackCapsule = Color(0xFF0F1015)
-val CardWhite = LumiCardDark
-val BorderSubtle = LumiCardBorderDark
-val ProgressTrack = Color(0xFF1A1D26)
-val SageGreenDark = LumiSage
-val SageGreenMedium = LumiSage
-val SageWash = Color(0xFF162314)
-val TextPrimary = LumiTextPrimary
-val TextSecondary = LumiTextSecondary
-val TextMuted = LumiTextMuted
-val MintPill = LumiSage
+// Backward compatibility aliases
+val LumiCanvasDark = AsclepiosBg
+val LumiCardDark = AsclepiosCard
+val LumiCardBorderDark = AsclepiosCardBorder
+val LumiTextPrimary = AsclepiosTextPrimary
+val LumiTextSecondary = AsclepiosTextSecondary
+val LumiTextMuted = AsclepiosTextMuted
+val LumiPeriwinkle = MetricHeartBlue
+val LumiAmber = MetricCalorieOrange
+val LumiCoral = MetricBpPink
+val LumiSage = SagePillGreen
+val CardWhite = AsclepiosCard
+val BorderSubtle = AsclepiosCardBorder
+val ProgressTrack = Color(0xFFEDE9DF)
+val SageGreenDark = SageDark
+val SageGreenMedium = SagePillGreen
+val SageWash = SageSoftWash
+val TextPrimary = AsclepiosTextPrimary
+val TextSecondary = AsclepiosTextSecondary
+val TextMuted = AsclepiosTextMuted
+val MintPill = SagePillGreen
