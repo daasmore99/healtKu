@@ -38,7 +38,14 @@ jobs:
 
       - name: Copy APK for Release
         run: |
-          cp app/build/outputs/apk/release/app-release.apk HealthKu.apk
+          find app/build/outputs/apk -name "*.apk" -type f
+          if [ -f app/build/outputs/apk/release/app-release.apk ]; then
+            cp app/build/outputs/apk/release/app-release.apk HealthKu.apk
+          elif [ -f app/build/outputs/apk/release/app-release-unsigned.apk ]; then
+            cp app/build/outputs/apk/release/app-release-unsigned.apk HealthKu.apk
+          else
+            cp $(find app/build/outputs/apk -name "*.apk" | head -n 1) HealthKu.apk
+          fi
 
       - name: Upload APK to Artifacts
         uses: actions/upload-artifact@v4
