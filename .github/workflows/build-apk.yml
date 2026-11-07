@@ -34,32 +34,28 @@ jobs:
           chmod +x gradlew
           ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
-      - name: Rename APK for Clear Download
+      - name: Copy APK to Root for Release
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/HealthKu-Asclepios.apk
+          cp app/build/outputs/apk/debug/app-debug.apk HealthKu.apk
 
       - name: Upload APK to Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: HealthKu-APK
-          path: app/build/outputs/apk/debug/HealthKu-Asclepios.apk
+          path: HealthKu.apk
           retention-days: 30
 
       - name: Create Release and Attach APK
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: "HealthKu Asclepios Edition #${{ github.run_number }}"
+          name: "HealthKu v1.0.${{ github.run_number }}"
           body: |
-            ## 📱 HealthKu APK Siap Pasang di HP Android
+            ## 🌿 HealthKu APK (Asclepios UI)
 
-            ### ⚠️ PENTING SEBELUM INSTALL:
-            Jika di HP kamu masih terpasang aplikasi HealthKu versi lama, **HAPUS / UNINSTALL aplikasi lama terlebih dahulu**. Ini wajib dilakukan agar tidak terjadi konflik tanda tangan (signature mismatch) di Android!
-
-            ### 🚀 Langkah Install:
-            1. Download file **`HealthKu-Asclepios.apk`** di bawah ini langsung dari HP kamu.
-            2. Buka file hasil unduhan, lalu klik **Install**.
-            3. Buka **HealthKu**, lalu klik tombol **Tarik Data Real dari Health Connect**.
-          files: app/build/outputs/apk/debug/HealthKu-Asclepios.apk
+            - File: **`HealthKu.apk`**
+            - Kompatibel dengan semua Android (Android 8.0 s/d Android 15).
+            - 100% Real data Health Connect.
+          files: HealthKu.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
