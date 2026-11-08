@@ -460,12 +460,12 @@ fun HomeScreen(
                             modifier = Modifier
                                 .padding(horizontal = 20.dp)
                                 .fillMaxWidth()
-                                .height(78.dp)
-                                .clip(RoundedCornerShape(24.dp))
+                                .height(74.dp)
+                                .clip(RoundedCornerShape(22.dp))
                                 .background(CardWhite)
-                                .border(1.dp, CardBorder, RoundedCornerShape(24.dp))
+                                .border(1.dp, CardBorder, RoundedCornerShape(22.dp))
                                 .clickable { go(calMetric?.route ?: "detail/Calories Burned") }
-                                .padding(horizontal = 14.dp, vertical = 12.dp),
+                                .padding(horizontal = 14.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             CircleIcon(
@@ -478,20 +478,20 @@ fun HomeScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Calories Burned",
-                                    fontSize = 15.sp,
+                                    fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = Ink
                                 )
                                 Spacer(Modifier.height(2.dp))
                                 Text(
-                                    text = "${calMetric?.value ?: "2000"} kcal • No Suggestion",
+                                    text = "No Suggestion",
                                     fontSize = 11.sp,
                                     color = Muted
                                 )
                             }
                             Text(
                                 text = "${calMetric?.value ?: "2000"} kcal",
-                                fontSize = 14.sp,
+                                fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Ink
                             )
@@ -502,12 +502,12 @@ fun HomeScreen(
                             modifier = Modifier
                                 .padding(horizontal = 20.dp)
                                 .fillMaxWidth()
-                                .height(78.dp)
-                                .clip(RoundedCornerShape(24.dp))
+                                .height(74.dp)
+                                .clip(RoundedCornerShape(22.dp))
                                 .background(CardWhite)
-                                .border(1.dp, CardBorder, RoundedCornerShape(24.dp))
+                                .border(1.dp, CardBorder, RoundedCornerShape(22.dp))
                                 .clickable { go(stepsMetric?.route ?: "detail/Steps Walked") }
-                                .padding(horizontal = 14.dp, vertical = 12.dp),
+                                .padding(horizontal = 14.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             CircleIcon(
@@ -520,20 +520,20 @@ fun HomeScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Steps Walked",
-                                    fontSize = 15.sp,
+                                    fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = Ink
                                 )
                                 Spacer(Modifier.height(2.dp))
                                 Text(
-                                    text = "${stepsMetric?.value ?: "8420"} steps • Target 10,000",
+                                    text = "84% of daily goal",
                                     fontSize = 11.sp,
                                     color = Muted
                                 )
                             }
                             Text(
-                                text = "${stepsMetric?.value ?: "8420"}",
-                                fontSize = 14.sp,
+                                text = "${stepsMetric?.value ?: "8420"} steps",
+                                fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Ink
                             )
@@ -544,12 +544,12 @@ fun HomeScreen(
                             modifier = Modifier
                                 .padding(horizontal = 20.dp)
                                 .fillMaxWidth()
-                                .height(78.dp)
-                                .clip(RoundedCornerShape(24.dp))
+                                .height(74.dp)
+                                .clip(RoundedCornerShape(22.dp))
                                 .background(CardWhite)
-                                .border(1.dp, CardBorder, RoundedCornerShape(24.dp))
+                                .border(1.dp, CardBorder, RoundedCornerShape(22.dp))
                                 .clickable { go("sleep") }
-                                .padding(horizontal = 14.dp, vertical = 12.dp),
+                                .padding(horizontal = 14.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             CircleIcon(
@@ -561,8 +561,8 @@ fun HomeScreen(
                             Spacer(Modifier.width(12.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Sleep Analysis",
-                                    fontSize = 15.sp,
+                                    text = "Sleep Overview",
+                                    fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = Ink
                                 )
@@ -574,11 +574,56 @@ fun HomeScreen(
                                 )
                             }
                             Text(
-                                text = "8.2h",
-                                fontSize = 14.sp,
+                                text = "8.2 h",
+                                fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Ink
                             )
+                        }
+
+                        // Horizontal Card: Water Intake
+                        val waterMetric = Store.metrics.firstOrNull { it.name == "Water Intake" }
+                        if (waterMetric != null) {
+                            Row(
+                                modifier = Modifier
+                                    .padding(horizontal = 20.dp)
+                                    .fillMaxWidth()
+                                    .height(74.dp)
+                                    .clip(RoundedCornerShape(22.dp))
+                                    .background(CardWhite)
+                                    .border(1.dp, CardBorder, RoundedCornerShape(22.dp))
+                                    .clickable { go(waterMetric.route) }
+                                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                CircleIcon(
+                                    type = HealthIconType.WATER,
+                                    tint = waterMetric.tint,
+                                    bg = waterMetric.bg,
+                                    size = 42.dp
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "Water Intake",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = Ink
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Text(
+                                        text = "Daily hydration target",
+                                        fontSize = 11.sp,
+                                        color = Muted
+                                    )
+                                }
+                                Text(
+                                    text = "${waterMetric.value} ${waterMetric.unit}",
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Ink
+                                )
+                            }
                         }
                     }
                 }
