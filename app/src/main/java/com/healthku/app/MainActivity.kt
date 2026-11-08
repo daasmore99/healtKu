@@ -36,14 +36,17 @@ import com.healthku.app.data.HealthConnectManager
 import com.healthku.app.ui.asclepios.*
 import kotlinx.coroutines.launch
 
-private data class Tab(val route: String, val label: String, val icon: ImageVector)
+import androidx.compose.ui.res.painterResource
+import com.healthku.app.R
+
+private data class Tab(val route: String, val label: String, val icon: ImageVector? = null, val iconRes: Int? = null)
 
 private val tabs = listOf(
-    Tab("home", "Home", Icons.Default.Home),
-    Tab("metrics", "Metrik", Icons.Default.MonitorHeart),
-    Tab("sleep", "Tidur", Icons.Default.Bedtime),
-    Tab("ai", "AI Coach", Icons.Default.AutoAwesome),
-    Tab("profile", "Profil", Icons.Default.Person),
+    Tab("home", "Home", icon = Icons.Default.Home),
+    Tab("metrics", "Metrik", iconRes = R.drawable.ic_heart_pulse),
+    Tab("sleep", "Tidur", iconRes = R.drawable.ic_moon),
+    Tab("ai", "AI Coach", icon = Icons.Default.AutoAwesome),
+    Tab("profile", "Profil", icon = Icons.Default.Person),
 )
 
 class MainActivity : ComponentActivity() {
@@ -109,18 +112,24 @@ class MainActivity : ComponentActivity() {
                     containerColor = Cream,
                     bottomBar = {
                         if (route in tabs.map { it.route }) {
-                            NavigationBar(containerColor = Color.White) {
+                            NavigationBar(containerColor = CardWhite) {
                                 tabs.forEach { t ->
                                     val isSelected = route == t.route
                                     NavigationBarItem(
                                         selected = isSelected,
                                         onClick = { switchTab(nav, t.route) },
-                                        icon = { Icon(t.icon, null, modifier = Modifier.size(22.dp)) },
-                                        label = { Text(t.label, fontSize = 10.sp) },
+                                        icon = {
+                                            if (t.iconRes != null) {
+                                                Icon(painter = painterResource(id = t.iconRes), null, modifier = Modifier.size(22.dp))
+                                            } else if (t.icon != null) {
+                                                Icon(t.icon, null, modifier = Modifier.size(22.dp))
+                                            }
+                                        },
+                                        label = { Text(t.label, fontSize = 10.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
                                         colors = NavigationBarItemDefaults.colors(
-                                            selectedIconColor = Color.White,
-                                            indicatorColor = Forest,
-                                            selectedTextColor = Forest,
+                                            selectedIconColor = SageGreen,
+                                            indicatorColor = SagePillBg,
+                                            selectedTextColor = SageGreen,
                                             unselectedIconColor = Muted,
                                             unselectedTextColor = Muted
                                         ),

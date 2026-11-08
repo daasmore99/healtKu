@@ -106,7 +106,21 @@ fun MoreButton(
     }
 }
 
-/** Rounded icon container with pastel background. */
+/** Rounded icon container with pastel background using custom Painter / Drawable. */
+@Composable
+fun CircleIcon(painter: androidx.compose.ui.graphics.painter.Painter, tint: Color, bg: Color, size: Dp = 32.dp) {
+    Box(
+        modifier = Modifier
+            .size(size)
+            .clip(CircleShape)
+            .background(bg),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(painter, null, tint = tint, modifier = Modifier.size(size * 0.52f))
+    }
+}
+
+/** Rounded icon container with pastel background using ImageVector. */
 @Composable
 fun CircleIcon(icon: ImageVector, tint: Color, bg: Color, size: Dp = 32.dp) {
     Box(
