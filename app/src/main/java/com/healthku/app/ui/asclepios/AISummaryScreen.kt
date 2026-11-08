@@ -94,7 +94,7 @@ fun AISummaryScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color(0xFFF6EDE1), Color(0xFFEFE3D3)))),
+            .background(AsclepiosBg),
         contentPadding = PaddingValues(bottom = 32.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {

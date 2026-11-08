@@ -2,13 +2,17 @@ package com.healthku.app.ui.asclepios
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -18,92 +22,177 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.healthku.app.R
 import kotlinx.coroutines.delay
 
-/** Fade + slide-up when the item first enters composition (i.e. scrolls into view in a Lazy list). */
+/** Fade + subtle slide-up when the item enters composition. */
 @Composable
 fun Reveal(delayMs: Int = 0, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     val progress = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
         delay(delayMs.toLong())
-        progress.animateTo(1f, tween(600, easing = FastOutSlowInEasing))
+        progress.animateTo(1f, tween(500, easing = FastOutSlowInEasing))
     }
     Box(
-        modifier.graphicsLayer {
+        modifier = modifier.graphicsLayer {
             alpha = progress.value
-            translationY = (1f - progress.value) * 48f
-            val s = 0.97f + 0.03f * progress.value
+            translationY = (1f - progress.value) * 32f
+            val s = 0.98f + 0.02f * progress.value
             scaleX = s; scaleY = s
         },
     ) { content() }
 }
 
+/** Asclepios tactile squircle action button matching reference design. */
 @Composable
-fun SqButton(icon: ImageVector, size: Dp = 44.dp, tint: Color = Ink, bg: Color = CreamDeep, onClick: () -> Unit = {}) {
+fun SqButton(
+    icon: ImageVector,
+    size: Dp = 44.dp,
+    tint: Color = Ink,
+    bg: Color = CardWhite,
+    borderColor: Color = CardBorder,
+    onClick: () -> Unit = {}
+) {
     Box(
-        Modifier.size(size).clip(RoundedCornerShape(16.dp)).background(bg).clickable(onClick = onClick),
+        modifier = Modifier
+            .size(size)
+            .clip(RoundedCornerShape(14.dp))
+            .background(bg)
+            .border(1.dp, borderColor, RoundedCornerShape(14.dp))
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
-    ) { Icon(icon, null, tint = tint, modifier = Modifier.size(size * 0.45f)) }
+    ) {
+        Icon(icon, null, tint = tint, modifier = Modifier.size(size * 0.44f))
+    }
 }
 
+/** Three-dots context menu button. */
 @Composable
-fun MoreButton(items: List<Pair<String, () -> Unit>>, size: Dp = 26.dp, bg: Color = Color.White) {
+fun MoreButton(
+    items: List<Pair<String, () -> Unit>>,
+    size: Dp = 32.dp,
+    bg: Color = CardWhite,
+    borderColor: Color = CardBorder
+) {
     var open by remember { mutableStateOf(false) }
     Box {
-        SqButton(Icons.Default.MoreHoriz, size, bg = bg) { open = true }
-        androidx.compose.material3.DropdownMenu(open, { open = false }) {
+        Box(
+            modifier = Modifier
+                .size(size)
+                .clip(RoundedCornerShape(10.dp))
+                .background(bg)
+                .border(1.dp, borderColor, RoundedCornerShape(10.dp))
+                .clickable { open = true },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(Icons.Default.MoreHoriz, null, tint = Ink, modifier = Modifier.size(size * 0.6f))
+        }
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             items.forEach { (label, action) ->
-                androidx.compose.material3.DropdownMenuItem(text = { Text(label) }, onClick = { open = false; action() })
+                DropdownMenuItem(
+                    text = { Text(label, fontSize = 13.sp) },
+                    onClick = { open = false; action() }
+                )
             }
         }
     }
 }
 
+/** Rounded icon container with pastel background. */
 @Composable
 fun CircleIcon(icon: ImageVector, tint: Color, bg: Color, size: Dp = 32.dp) {
-    Box(Modifier.size(size).clip(CircleShape).background(bg), contentAlignment = Alignment.Center) {
-        Icon(icon, null, tint = tint, modifier = Modifier.size(size * 0.5f))
+    Box(
+        modifier = Modifier
+            .size(size)
+            .clip(CircleShape)
+            .background(bg),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(icon, null, tint = tint, modifier = Modifier.size(size * 0.52f))
     }
 }
 
+/** Section header with bold title and trailing action. */
 @Composable
-fun SectionHeader(title: String, trailing: @Composable () -> Unit) {
-    Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
-        Text(title, fontSize = 17.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold, modifier = Modifier.weight(1f))
+fun SectionHeader(title: String, trailing: @Composable () -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = title,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Ink,
+            modifier = Modifier.weight(1f)
+        )
         trailing()
     }
 }
 
+/** Authentic 3D Anatomical Heart with organic gentle heartbeat pulse. */
 @Composable
-fun Heart3D(size: Dp, green: Boolean = true, modifier: Modifier = Modifier) {
-    val beat by rememberInfiniteTransition(label = "beat").animateFloat(
-        1f, 1.08f,
-        infiniteRepeatable(keyframes { durationMillis = 1200; 1f at 0; 1.08f at 180; 1f at 360; 1.05f at 540; 1f at 720 }),
-        label = "scale",
+fun Heart3D(
+    size: Dp,
+    modifier: Modifier = Modifier
+) {
+    val beat by rememberInfiniteTransition(label = "pulse").animateFloat(
+        initialValue = 1f,
+        targetValue = 1.05f,
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 1400
+                1f at 0
+                1.06f at 220
+                1f at 420
+                1.04f at 620
+                1f at 820
+            },
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "heartbeat"
     )
-    val c = if (green) listOf(Color(0xFF9DB591), Color(0xFF3F5A3D), Color(0xFF1F2F1F))
-    else listOf(Color(0xFFF08A7E), Color(0xFFB3262A), Color(0xFF5C0F14))
-    Canvas(modifier.size(size).scale(beat)) {
-        val w = this.size.width; val h = this.size.height
-        val p = Path().apply {
-            moveTo(w * .5f, h * .92f)
-            cubicTo(w * .20f, h * .70f, w * .06f, h * .52f, w * .08f, h * .34f)
-            cubicTo(w * .10f, h * .18f, w * .24f, h * .10f, w * .36f, h * .14f)
-            cubicTo(w * .42f, h * .16f, w * .47f, h * .20f, w * .50f, h * .26f)
-            cubicTo(w * .53f, h * .20f, w * .58f, h * .16f, w * .64f, h * .14f)
-            cubicTo(w * .76f, h * .10f, w * .90f, h * .18f, w * .92f, h * .34f)
-            cubicTo(w * .94f, h * .52f, w * .80f, h * .70f, w * .5f, h * .92f)
-            close()
+    Image(
+        painter = painterResource(id = R.drawable.heart_3d),
+        contentDescription = "3D Anatomical Heart",
+        contentScale = ContentScale.Fit,
+        modifier = modifier
+            .size(size)
+            .scale(beat)
+    )
+}
+
+/** Sparkline wave curve for mini metric trends. */
+@Composable
+fun SparklineWave(
+    color: Color,
+    modifier: Modifier = Modifier.size(width = 44.dp, height = 18.dp)
+) {
+    Canvas(modifier = modifier) {
+        val w = size.width
+        val h = size.height
+        val path = Path().apply {
+            moveTo(0f, h * 0.6f)
+            quadraticBezierTo(w * 0.2f, h * 0.7f, w * 0.35f, h * 0.5f)
+            lineTo(w * 0.45f, h * 0.1f)
+            lineTo(w * 0.55f, h * 0.95f)
+            lineTo(w * 0.65f, h * 0.4f)
+            quadraticBezierTo(w * 0.8f, h * 0.5f, w, h * 0.5f)
         }
-        drawPath(p, Brush.radialGradient(c, center = Offset(w * .35f, h * .30f), radius = w * .8f))
-        val stroke = androidx.compose.ui.graphics.drawscope.Stroke(width = w * .05f, cap = StrokeCap.Round)
-        drawPath(Path().apply { moveTo(w * .44f, h * .18f); cubicTo(w * .42f, h * .08f, w * .48f, h * .04f, w * .53f, h * .04f) }, c[2], style = stroke)
-        drawPath(Path().apply { moveTo(w * .58f, h * .20f); cubicTo(w * .62f, h * .12f, w * .70f, h * .12f, w * .72f, h * .16f) }, c[2], style = stroke)
-        drawPath(Path().apply { moveTo(w * .30f, h * .40f); cubicTo(w * .36f, h * .50f, w * .40f, h * .64f, w * .48f, h * .76f) }, c[2].copy(alpha = .5f), style = androidx.compose.ui.graphics.drawscope.Stroke(width = w * .02f))
+        drawPath(
+            path = path,
+            color = color,
+            style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
+        )
     }
 }
