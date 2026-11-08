@@ -11,7 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.filled.ArrowBackIosNew
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -58,7 +58,7 @@ fun BloodPressureScreen(onBack: () -> Unit, go: (String) -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                SqButton(Icons.AutoMirrored.Filled.ArrowBackIosNew, 48.dp, onClick = onBack)
+                SqButton(Icons.AutoMirrored.Filled.ArrowBack, 48.dp, onClick = onBack)
                 Text("Blood Pressure", fontSize = 17.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center, modifier = Modifier.weight(1f))
                 MoreButton(
                     listOf(

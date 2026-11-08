@@ -9,7 +9,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBackIosNew
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
@@ -97,7 +98,7 @@ fun SleepScreen(onBack: () -> Unit) {
                     .statusBarsPadding().padding(horizontal = 20.dp).padding(top = 12.dp, bottom = 20.dp),
             ) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    SqButton(Icons.AutoMirrored.Filled.ArrowBackIosNew, 48.dp, onClick = onBack)
+                    SqButton(Icons.AutoMirrored.Filled.ArrowBack, 48.dp, onClick = onBack)
                     SqButton(Icons.Default.CalendarMonth, 48.dp) { pickDate = true }
                 }
                 Spacer(Modifier.height(18.dp))
@@ -119,7 +120,7 @@ fun SleepScreen(onBack: () -> Unit) {
                         val sc by animateFloatAsState(if (sel) 1.1f else 1f, label = "sc")
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.clickable(indication = null, interactionSource = remember { MutableInteractionSource() }) { selected = d },
+                            modifier = Modifier.clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) { selected = d },
                         ) {
                             Text(d.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH), fontSize = 11.sp, color = if (sel) Forest else Muted, fontWeight = if (sel) FontWeight.SemiBold else FontWeight.Normal)
                             Spacer(Modifier.height(6.dp))

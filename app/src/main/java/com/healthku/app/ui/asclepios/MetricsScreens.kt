@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBackIosNew
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
@@ -57,7 +57,7 @@ fun DetailScreen(name: String, onBack: () -> Unit) {
     ) {
         item {
             Row(Modifier.fillMaxWidth().statusBarsPadding().padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
-                SqButton(Icons.AutoMirrored.Filled.ArrowBackIosNew, 48.dp, onClick = onBack)
+                SqButton(Icons.AutoMirrored.Filled.ArrowBack, 48.dp, onClick = onBack)
                 Text(m.name, fontSize = 17.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center, modifier = Modifier.weight(1f))
                 SqButton(Icons.Default.Share, 48.dp) { shareText(ctx, "${m.name}: ${m.value} ${m.unit} (${m.status})") }
             }
