@@ -179,7 +179,7 @@ fun BloodPressureScreen(onBack: () -> Unit, go: (String) -> Unit) {
                     OverviewCard(
                         name = "Oxygen",
                         value = "98 %",
-                        iconRes = com.healthku.app.R.drawable.ic_wind,
+                        type = HealthIconType.OXYGEN,
                         tint = Color(0xFFC85B7A),
                         iconBg = Color(0xFFF7E4EA)
                     ) { go("detail/Oxygen") }
@@ -188,7 +188,7 @@ fun BloodPressureScreen(onBack: () -> Unit, go: (String) -> Unit) {
                     OverviewCard(
                         name = "Cholest...",
                         value = "210",
-                        iconRes = com.healthku.app.R.drawable.ic_flask,
+                        type = HealthIconType.CHOLESTEROL,
                         tint = Color(0xFF4B8E9D),
                         iconBg = Color(0xFFE0EFF2)
                     ) { go("detail/Cholesterol") }
@@ -256,7 +256,7 @@ fun BloodPressureScreen(onBack: () -> Unit, go: (String) -> Unit) {
 private fun OverviewCard(
     name: String,
     value: String,
-    iconRes: Int,
+    type: HealthIconType,
     tint: Color,
     iconBg: Color,
     onClick: () -> Unit
@@ -272,7 +272,7 @@ private fun OverviewCard(
             .padding(14.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            CircleIcon(painter = androidx.compose.ui.res.painterResource(id = iconRes), tint = tint, bg = iconBg, size = 30.dp)
+            CircleIcon(type = type, tint = tint, bg = iconBg, size = 30.dp)
             Spacer(Modifier.width(8.dp))
             Text(name, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Ink, maxLines = 1)
         }

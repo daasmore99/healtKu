@@ -183,7 +183,7 @@ fun HomeScreen(
                             .padding(horizontal = 14.dp, vertical = 9.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(painter = painterResource(id = R.drawable.ic_smartwatch), null, tint = SageGreen, modifier = Modifier.size(20.dp))
+                        HealthIcon(type = HealthIconType.SMARTWATCH, tint = SageGreen, modifier = Modifier.size(20.dp))
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = "Hubungkan Smartwatch (Health Connect)",
@@ -317,7 +317,7 @@ fun HomeScreen(
                                 Column(modifier = Modifier.fillMaxSize()) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         CircleIcon(
-                                            painter = painterResource(id = R.drawable.ic_heart_pulse),
+                                            type = HealthIconType.HEART_RATE,
                                             tint = Color(0xFF4B8E9D),
                                             bg = Color(0xFFE0EFF2),
                                             size = 30.dp
@@ -388,7 +388,7 @@ fun HomeScreen(
                                 Column(modifier = Modifier.fillMaxSize()) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         CircleIcon(
-                                            painter = painterResource(id = R.drawable.ic_stethoscope),
+                                            type = HealthIconType.BLOOD_PRESSURE,
                                             tint = Color(0xFFC85B7A),
                                             bg = Color(0xFFF7E4EA),
                                             size = 30.dp
@@ -469,7 +469,7 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             CircleIcon(
-                                painter = painterResource(id = R.drawable.ic_flame),
+                                type = HealthIconType.CALORIES,
                                 tint = Color(0xFFE27B30),
                                 bg = Color(0xFFFDF0E2),
                                 size = 42.dp
@@ -511,7 +511,7 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             CircleIcon(
-                                painter = painterResource(id = R.drawable.ic_footprints),
+                                type = HealthIconType.STEPS,
                                 tint = Color(0xFF4B8E9D),
                                 bg = Color(0xFFE0EFF2),
                                 size = 42.dp
@@ -553,7 +553,7 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             CircleIcon(
-                                painter = painterResource(id = R.drawable.ic_moon),
+                                type = HealthIconType.SLEEP,
                                 tint = SageGreen,
                                 bg = SagePillBg,
                                 size = 42.dp
@@ -600,7 +600,7 @@ fun MetricRow(m: Metric, onClick: () -> Unit) {
             .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CircleIcon(painter = painterResource(id = m.iconRes), m.tint, m.bg, 40.dp)
+        CircleIcon(type = m.iconType, tint = m.tint, bg = m.bg, size = 40.dp)
         Text(
             text = m.name,
             fontSize = 14.sp,

@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import com.healthku.app.R
 import com.healthku.app.data.DailyHealthSummary
 import java.time.LocalDate
 
@@ -14,7 +13,7 @@ data class Metric(
     val value: String,
     val unit: String,
     val status: String,
-    val iconRes: Int,
+    val iconType: HealthIconType,
     val tint: Color,
     val bg: Color,
     val url: String,
@@ -36,7 +35,7 @@ object Store {
             value = "70",
             unit = "bpm",
             status = "Normal resting range",
-            iconRes = R.drawable.ic_heart_pulse,
+            iconType = HealthIconType.HEART_RATE,
             tint = Color(0xFF4B8E9D),
             bg = Color(0xFFE0EFF2),
             url = "https://www.who.int/health-topics/cardiovascular-diseases",
@@ -47,7 +46,7 @@ object Store {
             value = "121/80",
             unit = "mmHg",
             status = "Slightly elevated",
-            iconRes = R.drawable.ic_stethoscope,
+            iconType = HealthIconType.BLOOD_PRESSURE,
             tint = Color(0xFFC85B7A),
             bg = Color(0xFFF7E4EA),
             url = "https://www.heart.org/en/health-topics/high-blood-pressure",
@@ -59,7 +58,7 @@ object Store {
             value = "98",
             unit = "%",
             status = "Healthy SpO2",
-            iconRes = R.drawable.ic_wind,
+            iconType = HealthIconType.OXYGEN,
             tint = Color(0xFFC85B7A),
             bg = Color(0xFFF7E4EA),
             url = "https://www.who.int/health-topics/oxygen",
@@ -70,7 +69,7 @@ object Store {
             value = "172",
             unit = "mg/dL",
             status = "Desirable (< 200)",
-            iconRes = R.drawable.ic_flask,
+            iconType = HealthIconType.CHOLESTEROL,
             tint = Color(0xFF4B8E9D),
             bg = Color(0xFFE0EFF2),
             url = "https://www.cdc.gov/cholesterol/about/index.html",
@@ -81,7 +80,7 @@ object Store {
             value = "2000",
             unit = "kcal",
             status = "On target for today",
-            iconRes = R.drawable.ic_flame,
+            iconType = HealthIconType.CALORIES,
             tint = Color(0xFFE27B30),
             bg = Color(0xFFFDF0E2),
             url = "https://www.cdc.gov/healthy-weight-growth/physical-activity/index.html",
@@ -92,7 +91,7 @@ object Store {
             value = "8420",
             unit = "steps",
             status = "84% of daily goal",
-            iconRes = R.drawable.ic_footprints,
+            iconType = HealthIconType.STEPS,
             tint = Color(0xFF4B8E9D),
             bg = Color(0xFFE0EFF2),
             url = "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
@@ -103,12 +102,12 @@ object Store {
             value = "1.8",
             unit = "L",
             status = "Drink 0.7 L more",
-            iconRes = R.drawable.ic_droplet,
+            iconType = HealthIconType.WATER,
             tint = Color(0xFF3B82F6),
             bg = Color(0xFFDFE9F6),
             url = "https://www.cdc.gov/healthy-weight-growth/water-consumption/index.html",
             series = listOf(1.5f, 2f, 1.8f, 2.2f, 1.6f, 1.9f, 1.8f)
-        ),
+        )
     )
     fun metric(name: String) = metrics.first { it.name == name }
 

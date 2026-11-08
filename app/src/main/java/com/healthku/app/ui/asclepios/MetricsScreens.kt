@@ -77,7 +77,7 @@ fun MetricCard(m: Metric, modifier: Modifier = Modifier, onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                CircleIcon(painter = painterResource(id = m.iconRes), m.tint, m.bg, size = 30.dp)
+                CircleIcon(type = m.iconType, tint = m.tint, bg = m.bg, size = 30.dp)
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = m.name,
@@ -106,7 +106,7 @@ fun MetricCard(m: Metric, modifier: Modifier = Modifier, onClick: () -> Unit) {
                         Heart3D(size = 68.dp)
                     }
                     else -> {
-                        CircleIcon(painter = painterResource(id = m.iconRes), m.tint, m.bg, size = 52.dp)
+                        CircleIcon(type = m.iconType, tint = m.tint, bg = m.bg, size = 52.dp)
                     }
                 }
             }

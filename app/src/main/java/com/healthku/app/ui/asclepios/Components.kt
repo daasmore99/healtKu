@@ -33,6 +33,18 @@ import androidx.compose.ui.unit.sp
 import com.healthku.app.R
 import kotlinx.coroutines.delay
 
+enum class HealthIconType {
+    HEART_RATE,
+    BLOOD_PRESSURE,
+    OXYGEN,
+    CHOLESTEROL,
+    CALORIES,
+    STEPS,
+    WATER,
+    SLEEP,
+    SMARTWATCH
+}
+
 /** Fade + subtle slide-up when the item enters composition. */
 @Composable
 fun Reveal(delayMs: Int = 0, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
@@ -106,9 +118,178 @@ fun MoreButton(
     }
 }
 
-/** Rounded icon container with pastel background using custom Painter / Drawable. */
+/** Custom Health Vector Icons rendered natively on Canvas with smooth rounded anti-aliased geometry. */
 @Composable
-fun CircleIcon(painter: androidx.compose.ui.graphics.painter.Painter, tint: Color, bg: Color, size: Dp = 32.dp) {
+fun HealthIcon(
+    type: HealthIconType,
+    tint: Color,
+    modifier: Modifier = Modifier
+) {
+    Canvas(modifier = modifier) {
+        val w = size.width
+        val h = size.height
+        val stroke = Stroke(width = (w * 0.09f).coerceAtLeast(1.8f.dp.toPx()), cap = StrokeCap.Round, join = StrokeJoin.Round)
+
+        when (type) {
+            HealthIconType.HEART_RATE -> {
+                val heart = Path().apply {
+                    moveTo(w * 0.5f, h * 0.85f)
+                    cubicTo(w * 0.15f, h * 0.62f, w * 0.05f, h * 0.35f, w * 0.22f, h * 0.18f)
+                    cubicTo(w * 0.36f, h * 0.08f, w * 0.46f, h * 0.20f, w * 0.5f, h * 0.30f)
+                    cubicTo(w * 0.54f, h * 0.20f, w * 0.64f, h * 0.08f, w * 0.78f, h * 0.18f)
+                    cubicTo(w * 0.95f, h * 0.35f, w * 0.85f, h * 0.62f, w * 0.5f, h * 0.85f)
+                    close()
+                }
+                drawPath(heart, color = tint.copy(alpha = 0.28f), style = Stroke(width = stroke.width * 0.75f, cap = StrokeCap.Round))
+                val ecg = Path().apply {
+                    moveTo(w * 0.10f, h * 0.52f)
+                    lineTo(w * 0.32f, h * 0.52f)
+                    lineTo(w * 0.42f, h * 0.28f)
+                    lineTo(w * 0.56f, h * 0.74f)
+                    lineTo(w * 0.66f, h * 0.42f)
+                    lineTo(w * 0.74f, h * 0.52f)
+                    lineTo(w * 0.90f, h * 0.52f)
+                }
+                drawPath(ecg, color = tint, style = stroke)
+            }
+            HealthIconType.BLOOD_PRESSURE -> {
+                val tube = Path().apply {
+                    moveTo(w * 0.24f, h * 0.15f)
+                    lineTo(w * 0.24f, h * 0.38f)
+                    cubicTo(w * 0.24f, h * 0.64f, w * 0.76f, h * 0.64f, w * 0.76f, h * 0.38f)
+                    lineTo(w * 0.76f, h * 0.15f)
+                }
+                drawPath(tube, color = tint, style = stroke)
+                drawLine(tint, Offset(w * 0.18f, h * 0.18f), Offset(w * 0.30f, h * 0.18f), strokeWidth = stroke.width)
+                drawLine(tint, Offset(w * 0.70f, h * 0.18f), Offset(w * 0.82f, h * 0.18f), strokeWidth = stroke.width)
+                val stem = Path().apply {
+                    moveTo(w * 0.5f, h * 0.62f)
+                    lineTo(w * 0.5f, h * 0.78f)
+                }
+                drawPath(stem, color = tint, style = stroke)
+                drawCircle(color = tint, radius = w * 0.13f, center = Offset(w * 0.5f, h * 0.84f), style = stroke)
+            }
+            HealthIconType.CALORIES -> {
+                val flame = Path().apply {
+                    moveTo(w * 0.5f, h * 0.10f)
+                    cubicTo(w * 0.66f, h * 0.32f, w * 0.85f, h * 0.54f, w * 0.85f, h * 0.72f)
+                    cubicTo(w * 0.85f, h * 0.92f, w * 0.68f, h * 0.96f, w * 0.5f, h * 0.96f)
+                    cubicTo(w * 0.32f, h * 0.96f, w * 0.15f, h * 0.92f, w * 0.15f, h * 0.72f)
+                    cubicTo(w * 0.15f, h * 0.54f, w * 0.34f, h * 0.32f, w * 0.5f, h * 0.10f)
+                    close()
+                }
+                drawPath(flame, color = tint, style = stroke)
+                val core = Path().apply {
+                    moveTo(w * 0.5f, h * 0.56f)
+                    cubicTo(w * 0.62f, h * 0.68f, w * 0.70f, h * 0.78f, w * 0.70f, h * 0.85f)
+                    cubicTo(w * 0.70f, h * 0.94f, w * 0.60f, h * 0.96f, w * 0.5f, h * 0.96f)
+                    cubicTo(w * 0.40f, h * 0.96f, w * 0.30f, h * 0.94f, w * 0.30f, h * 0.85f)
+                    cubicTo(w * 0.30f, h * 0.78f, w * 0.38f, h * 0.68f, w * 0.5f, h * 0.56f)
+                    close()
+                }
+                drawPath(core, color = tint)
+            }
+            HealthIconType.STEPS -> {
+                val left = Path().apply {
+                    moveTo(w * 0.32f, h * 0.44f)
+                    cubicTo(w * 0.18f, h * 0.44f, w * 0.18f, h * 0.18f, w * 0.32f, h * 0.12f)
+                    cubicTo(w * 0.46f, h * 0.18f, w * 0.46f, h * 0.44f, w * 0.32f, h * 0.44f)
+                }
+                drawPath(left, color = tint, style = stroke)
+                drawCircle(color = tint, radius = w * 0.075f, center = Offset(w * 0.32f, h * 0.60f))
+
+                val right = Path().apply {
+                    moveTo(w * 0.68f, h * 0.70f)
+                    cubicTo(w * 0.54f, h * 0.70f, w * 0.54f, h * 0.44f, w * 0.68f, h * 0.38f)
+                    cubicTo(w * 0.82f, h * 0.44f, w * 0.82f, h * 0.70f, w * 0.68f, h * 0.70f)
+                }
+                drawPath(right, color = tint, style = stroke)
+                drawCircle(color = tint, radius = w * 0.075f, center = Offset(w * 0.68f, h * 0.86f))
+            }
+            HealthIconType.OXYGEN -> {
+                val wave1 = Path().apply {
+                    moveTo(w * 0.12f, h * 0.34f)
+                    cubicTo(w * 0.35f, h * 0.20f, w * 0.55f, h * 0.46f, w * 0.88f, h * 0.32f)
+                }
+                val wave2 = Path().apply {
+                    moveTo(w * 0.12f, h * 0.54f)
+                    cubicTo(w * 0.40f, h * 0.40f, w * 0.60f, h * 0.66f, w * 0.88f, h * 0.52f)
+                }
+                val wave3 = Path().apply {
+                    moveTo(w * 0.20f, h * 0.74f)
+                    cubicTo(w * 0.45f, h * 0.64f, w * 0.65f, h * 0.86f, w * 0.82f, h * 0.72f)
+                }
+                drawPath(wave1, color = tint, style = stroke)
+                drawPath(wave2, color = tint, style = stroke)
+                drawPath(wave3, color = tint, style = stroke)
+            }
+            HealthIconType.CHOLESTEROL -> {
+                val flask = Path().apply {
+                    moveTo(w * 0.40f, h * 0.14f)
+                    lineTo(w * 0.60f, h * 0.14f)
+                    moveTo(w * 0.45f, h * 0.14f)
+                    lineTo(w * 0.45f, h * 0.38f)
+                    lineTo(w * 0.18f, h * 0.85f)
+                    cubicTo(w * 0.16f, h * 0.90f, w * 0.24f, h * 0.92f, w * 0.50f, h * 0.92f)
+                    cubicTo(w * 0.76f, h * 0.92f, w * 0.84f, h * 0.90f, w * 0.82f, h * 0.85f)
+                    lineTo(w * 0.55f, h * 0.38f)
+                    lineTo(w * 0.55f, h * 0.14f)
+                }
+                drawPath(flask, color = tint, style = stroke)
+                drawLine(tint, Offset(w * 0.28f, h * 0.72f), Offset(w * 0.72f, h * 0.72f), strokeWidth = stroke.width)
+            }
+            HealthIconType.WATER -> {
+                val drop = Path().apply {
+                    moveTo(w * 0.5f, h * 0.14f)
+                    cubicTo(w * 0.76f, h * 0.44f, w * 0.84f, h * 0.64f, w * 0.82f, h * 0.76f)
+                    cubicTo(w * 0.78f, h * 0.94f, w * 0.22f, h * 0.94f, w * 0.18f, h * 0.76f)
+                    cubicTo(w * 0.16f, h * 0.64f, w * 0.24f, h * 0.44f, w * 0.5f, h * 0.14f)
+                    close()
+                }
+                drawPath(drop, color = tint, style = stroke)
+            }
+            HealthIconType.SLEEP -> {
+                val moon = Path().apply {
+                    moveTo(w * 0.68f, h * 0.16f)
+                    cubicTo(w * 0.32f, h * 0.24f, w * 0.22f, h * 0.62f, w * 0.45f, h * 0.88f)
+                    cubicTo(w * 0.18f, h * 0.70f, w * 0.20f, h * 0.32f, w * 0.58f, h * 0.14f)
+                    close()
+                }
+                drawPath(moon, color = tint)
+                drawLine(tint, Offset(w * 0.72f, h * 0.36f), Offset(w * 0.84f, h * 0.36f), strokeWidth = stroke.width * 0.8f)
+                drawLine(tint, Offset(w * 0.78f, h * 0.30f), Offset(w * 0.78f, h * 0.42f), strokeWidth = stroke.width * 0.8f)
+            }
+            HealthIconType.SMARTWATCH -> {
+                val strapTop = Path().apply {
+                    moveTo(w * 0.35f, h * 0.26f)
+                    lineTo(w * 0.35f, h * 0.10f)
+                    lineTo(w * 0.65f, h * 0.10f)
+                    lineTo(w * 0.65f, h * 0.26f)
+                }
+                val strapBottom = Path().apply {
+                    moveTo(w * 0.35f, h * 0.74f)
+                    lineTo(w * 0.35f, h * 0.90f)
+                    lineTo(w * 0.65f, h * 0.90f)
+                    lineTo(w * 0.65f, h * 0.74f)
+                }
+                drawPath(strapTop, color = tint, style = stroke)
+                drawPath(strapBottom, color = tint, style = stroke)
+                drawCircle(color = tint, radius = w * 0.30f, center = Offset(w * 0.5f, h * 0.5f), style = stroke)
+                drawLine(tint, Offset(w * 0.5f, h * 0.5f), Offset(w * 0.5f, h * 0.36f), strokeWidth = stroke.width)
+                drawLine(tint, Offset(w * 0.5f, h * 0.5f), Offset(w * 0.62f, h * 0.58f), strokeWidth = stroke.width)
+            }
+        }
+    }
+}
+
+/** Rounded icon container with custom HealthIconType. */
+@Composable
+fun CircleIcon(
+    type: HealthIconType,
+    tint: Color,
+    bg: Color,
+    size: Dp = 32.dp
+) {
     Box(
         modifier = Modifier
             .size(size)
@@ -116,13 +297,18 @@ fun CircleIcon(painter: androidx.compose.ui.graphics.painter.Painter, tint: Colo
             .background(bg),
         contentAlignment = Alignment.Center
     ) {
-        Icon(painter, null, tint = tint, modifier = Modifier.size(size * 0.52f))
+        HealthIcon(type = type, tint = tint, modifier = Modifier.size(size * 0.56f))
     }
 }
 
-/** Rounded icon container with pastel background using ImageVector. */
+/** Rounded icon container with standard ImageVector fallback. */
 @Composable
-fun CircleIcon(icon: ImageVector, tint: Color, bg: Color, size: Dp = 32.dp) {
+fun CircleIcon(
+    icon: ImageVector,
+    tint: Color,
+    bg: Color,
+    size: Dp = 32.dp
+) {
     Box(
         modifier = Modifier
             .size(size)
